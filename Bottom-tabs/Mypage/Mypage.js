@@ -1,12 +1,27 @@
-import { View, Text } from "react-native";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 import React from "react";
+import Credit from "./credit";
+import MypageMain from "./mypageMain";
+
+const StackOfMypage = createStackNavigator(
+  {
+    mypageMain: {
+      screen: MypageMain
+    },
+    credit: {
+      screen: Credit
+    }
+  },
+  {
+    initialRouteName: "mypageMain"
+  }
+);
+
+const MypageStack = createAppContainer(StackOfMypage);
 
 const Mypage = () => {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>mypage tab</Text>
-    </View>
-  );
+  return <MypageStack />;
 };
 
 export default Mypage;
