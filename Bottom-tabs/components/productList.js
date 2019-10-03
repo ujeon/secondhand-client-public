@@ -13,10 +13,10 @@ const ProductList = props => {
   }
 
   // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘(prop으로 전달 받아야 함)
-  // TOFIX 빈 하트 아이콘 로딩이 안되요 ㅠㅠ
-  let isFavorite = true;
-  let favoritIcon;
-  isFavorite ? (favoritIcon = "favorite") : (favoritIcon = "favorite_border");
+  // FIXED 빈 하트 아이콘 로딩이 안되요 ㅠㅠ
+  let isFavorite = false;
+  let favoriteIcon;
+  isFavorite ? (favoriteIcon = "favorite") : (favoriteIcon = "favorite-border");
 
   // NOTE average_price 변수가 존재하면 해당 객체에 존재하는 평균가격을 할당하고, 그렇지 않으면 '정보 없음' 이라고 표시합니다.
   let average;
@@ -44,7 +44,7 @@ const ProductList = props => {
         return (
           <ListItem
             key={l.id}
-            leftAvatar={{ source: { uri: l.img_url } }}
+            leftAvatar={{ source: { uri: l.img_url }, size: 70 }}
             title={`${l.brand} / ${l.model}`}
             subtitle={
               <View>
@@ -54,16 +54,16 @@ const ProductList = props => {
                   <View style={styles.location}>
                     <Text>{location}</Text>
                   </View>
-                  <View style={styles.market}>
-                    <Text style={{ textAlign: "right" }}>{l.market}</Text>
-                  </View>
+                </View>
+                <View>
+                  <Text>{l.market}</Text>
                 </View>
               </View>
             }
             onPress={() => Linking.openURL(l.url)}
             rightIcon={
               <Icon
-                name={favoritIcon}
+                name={favoriteIcon}
                 type="material"
                 color="#f9b0c3"
                 size={40}
