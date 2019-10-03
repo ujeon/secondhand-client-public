@@ -1,6 +1,7 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import React from "react";
+
 import Credit from "./credit";
 import MypageMain from "./mypageMain";
 
@@ -17,6 +18,7 @@ const StackOfMypage = createStackNavigator(
     initialRouteName: "mypageMain"
   }
 );
+
 
 const MypageStack = createAppContainer(StackOfMypage);
 
