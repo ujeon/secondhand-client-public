@@ -11,15 +11,20 @@ export default class Select extends Component {
   constructor(props) {
     super();
     this.state = {
-      brand: ["BMW", "Benz", "Ferrari"],
-      model: ["a", "b", "c"],
+      brand: [],
+      model: [],
       selectedBrand: "",
       selectedModel: ""
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // 브랜드와 모델을 fetch해서 state에 저장 후 드롭다운 메뉴에 뿌려주기
+    let brand = await fetch('http://3.17.152.1:8000/api/category/유모차/brand/')
+    .then(res => res.json())
+    .then(res => res)
+    brand = brand.map(element => element.brand)
+    this.setState({ brand })
   }
 
   goResult = () => {
@@ -29,11 +34,15 @@ export default class Select extends Component {
         selectModel: this.state.model[0]
       });
     }
-    this.props.navigation.push("result");
+    this.props.navigation.push("result", {brand: this.state.selectedBrand, model: this.state.selectedModel});
   };
 
-  selectBrand = event => {
-    this.setState({ selectedBrand: event });
+  selectBrand = async event => {
+    let model = await fetch(`http://3.17.152.1:8000/api/category/유모차/${event}/model/`)
+    .then(res => res.json())
+    .then(res => res)
+    model = model.map(element => element.model)
+    this.setState({ selectedBrand: event, model });
   };
 
   selectModel = event => {
