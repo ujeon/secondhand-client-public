@@ -2,8 +2,8 @@ import React from "react";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 
-import SignIn from './signIn'
-import SignUp from './signUp'
+import SignIn from "./signIn";
+import SignUp from "./signUp";
 import Navigation from "../Navigation";
 
 const MainStackNav = createStackNavigator(
@@ -15,7 +15,7 @@ const MainStackNav = createStackNavigator(
       screen: SignUp,
       navigationOptions: {
         header: null
-        }
+      }
     },
     nav: {
       screen: Navigation,
