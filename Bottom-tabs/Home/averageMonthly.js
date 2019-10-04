@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { View, Dimensions } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import React, { Component } from 'react';
+import { View, Dimensions } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import { showMessage } from 'react-native-flash-message';
 
 export default class AverageMonthly extends Component {
   render() {
@@ -11,9 +12,9 @@ export default class AverageMonthly extends Component {
       daily: [
         {
           id: 176,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-10-01",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-10-01',
           average_price: 283333,
           lowest_price: 250000,
           highest_price: 300000,
@@ -21,9 +22,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 177,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-28",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-28',
           average_price: 375000,
           lowest_price: 300000,
           highest_price: 450000,
@@ -31,9 +32,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 178,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-29",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-29',
           average_price: 287500,
           lowest_price: 250000,
           highest_price: 350000,
@@ -41,9 +42,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 179,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-26",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-26',
           average_price: 230000,
           lowest_price: 230000,
           highest_price: 230000,
@@ -51,9 +52,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 180,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-27",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-27',
           average_price: 415000,
           lowest_price: 380000,
           highest_price: 450000,
@@ -61,9 +62,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 181,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-24",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-24',
           average_price: 293333,
           lowest_price: 290000,
           highest_price: 300000,
@@ -71,9 +72,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 182,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-25",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-25',
           average_price: 300000,
           lowest_price: 300000,
           highest_price: 300000,
@@ -81,9 +82,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 183,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-30",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-30',
           average_price: 291666,
           lowest_price: 270000,
           highest_price: 350000,
@@ -91,9 +92,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 184,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-23",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-23',
           average_price: 325000,
           lowest_price: 250000,
           highest_price: 500000,
@@ -101,9 +102,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 185,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-21",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-21',
           average_price: 250000,
           lowest_price: 250000,
           highest_price: 250000,
@@ -111,9 +112,9 @@ export default class AverageMonthly extends Component {
         },
         {
           id: 187,
-          brand: "EASYWALKER",
-          model: "HARVEY",
-          date: "2019-09-12",
+          brand: 'EASYWALKER',
+          model: 'HARVEY',
+          date: '2019-09-12',
           average_price: 150000,
           lowest_price: 150000,
           highest_price: 150000,
@@ -132,13 +133,13 @@ export default class AverageMonthly extends Component {
               }
             ]
           }}
-          width={Dimensions.get("window").width * 3} // from react-native
+          width={Dimensions.get('window').width * 3} // from react-native
           height={350}
-          yAxisLabel=""
+          yAxisLabel=''
           chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
+            backgroundColor: '#e26a00',
+            backgroundGradientFrom: '#fb8c00',
+            backgroundGradientTo: '#ffa726',
             decimalPlaces: 0, // optional, defaults to 2dp
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             style: {
@@ -150,6 +151,13 @@ export default class AverageMonthly extends Component {
           style={{
             marginVertical: 10,
             borderRadius: 16
+          }}
+          onDataPointClick={({ value, getColor }) => {
+            showMessage({
+              message: `${value}`,
+              description: 'You selected this value',
+              backgroundColor: getColor(0.9)
+            });
           }}
         />
       </View>
