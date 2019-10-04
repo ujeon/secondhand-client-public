@@ -14,13 +14,13 @@ export default class SignIn extends React.Component {
     };
   }
 
-  handleSignInButtonClicked = async () => {
+  requestUserSignIn = async () => {
     let { email, password } = this.state;
     password = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
       password
     );
-    await fetch("http://10.0.2.2:8000/user/signin/", {
+    await fetch("http://3.17.152.1:8000/user/signin/", {
       method: "POST",
       body: JSON.stringify({ email, password })
     })
@@ -39,8 +39,24 @@ export default class SignIn extends React.Component {
       .catch(err => console.log(err));
   };
 
+  handleSignInBtn = async () => {
+    await this.requestUserSignIn();
+
+    let token = await AsyncStorage.getItem("token");
+
+    if (this.state.isSignIn === true) {
+      let page = this.props.navigation.getParam("page", "mypageMain");
+
+      if (page) {
+        this.props.navigation.navigate("mypageMain", { token });
+      }
+      this.props.navigation.navigate("nav");
+    } else {
+      console.log("로그인에 실패했습니다");
+    }
+  };
+
   render() {
-    console.log("로그인 페이지 상태", this.state);
     return (
       <View>
         <Input
@@ -69,15 +85,8 @@ export default class SignIn extends React.Component {
         />
         <Button
           title="로그인"
-          onPress={async () => {
-            await this.handleSignInButtonClicked();
-            if (this.state.isSignIn === true) {
-              this.props.navigation.navigate("nav", {
-                greeting: "로그인 되었습니다."
-              });
-            } else {
-              console.log("로그인에 실패했습니다");
-            }
+          onPress={() => {
+            this.handleSignInBtn();
           }}
         />
         <Button
