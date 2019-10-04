@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { View, AsyncStorage } from "react-native";
 import { Text, Button } from "react-native-elements";
 
-
 export default class mypageMain extends Component {
   constructor(props) {
     super();
@@ -15,18 +14,12 @@ export default class mypageMain extends Component {
   // 유저가 로그인을 했을 때 유저 정보와 로그아웃 버튼을 보여주고
   // 로그인 정보가 없을 경우 크레딧 버튼만 보여준다
 
-// 기기에 저장된 토큰을 정보로 가져옵니다.
-  async componentDidMount() {
-  const secure = await AsyncStorage.getItem("token")
-  console.log('씨큐어',secure)
-  }
-  
-
   goCredit = () => {
     this.props.navigation.push("credit");
   };
 
-  logOut = () => {
+  logOut = async () => {
+    await AsyncStorage.removeItem("token");
     this.setState({ userId: 0 });
     this.props.navigation.navigate("main");
   };
