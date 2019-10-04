@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { Text, View, Picker, Alert } from "react-native";
-import { Button } from "react-native-elements";
+import React, { Component } from 'react';
+import { View, Picker } from 'react-native';
+import { Button } from 'react-native-elements';
+import Top5Quantity from './top5Quantity';
 
 export default class Select extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ export default class Select extends Component {
   }
 
   goResult = () => {
-    if (this.state.selectedBrand === "" || this.state.selectedModel === "") {
+    if (this.state.selectedBrand === '' || this.state.selectedModel === '') {
       this.setState({
         selectBrand: this.state.brand[0],
         selectModel: this.state.model[0]
@@ -47,7 +48,7 @@ export default class Select extends Component {
   render() {
     return (
       <View>
-        <Text> 여기에 그래프가 들어갈 예정 </Text>
+        <Top5Quantity />
         <Picker
           selectedValue={this.state.selectedBrand}
           style={{ height: 50, width: 200 }}
@@ -68,7 +69,7 @@ export default class Select extends Component {
             <Picker.Item label={model} value={model} key={model} />
           ))}
         </Picker>
-        <Button title="조건 선택" onPress={this.goResult} />
+        <Button title='조건 선택' onPress={this.goResult} />
       </View>
     );
   }

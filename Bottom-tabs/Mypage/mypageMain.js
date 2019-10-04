@@ -2,17 +2,13 @@ import React, { Component } from "react";
 import { View, AsyncStorage } from "react-native";
 import { Text, Button } from "react-native-elements";
 
-export default class mypageMain extends Component {
+export default class MypageMain extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
-      // 유저의 정보를 확인(토큰이나 세션 정보로 대체 필요)
-      userId: 1
+      token: null
     };
   }
-
-  // 유저가 로그인을 했을 때 유저 정보와 로그아웃 버튼을 보여주고
-  // 로그인 정보가 없을 경우 크레딧 버튼만 보여준다
 
   goCredit = () => {
     this.props.navigation.push("credit");
@@ -20,14 +16,27 @@ export default class mypageMain extends Component {
 
   logOut = async () => {
     await AsyncStorage.removeItem("token");
-    this.setState({ userId: 0 });
-    this.props.navigation.navigate("main");
+    const token = await AsyncStorage.getItem("token");
+    this.setState({ token });
   };
 
   getUserInfo = () => {};
 
+  componentDidMount = async () => {
+    const token = await AsyncStorage.getItem("token");
+    this.setState({ token });
+  };
+
+  componentDidUpdate(prevProps) {
+    const prevToken = prevProps.navigation.getParam("token");
+    const newToken = this.props.navigation.getParam("token");
+    if (prevToken !== newToken) {
+      this.setState({ token: newToken });
+    }
+  }
+
   render() {
-    return this.state.userId ? (
+    return this.state.token ? (
       <View>
         <Text h4> 여기에 유저 정보가 표시됩니다 </Text>
         <Button title="Credit" onPress={this.goCredit} />
@@ -37,6 +46,12 @@ export default class mypageMain extends Component {
       <View>
         <Text h4> 로그인 해 주세요 </Text>
         <Button title="Credit" onPress={this.goCredit} />
+        <Button
+          title="로그인 하러가기"
+          onPress={() => {
+            this.props.navigation.navigate("signin", { page: "mypageMain" });
+          }}
+        />
       </View>
     );
   }
