@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Text, View, Button } from "react-native";
+import React, { Component } from 'react';
+import { Text, View, Button } from 'react-native';
 
 export default class Main extends Component {
   render() {
@@ -7,9 +7,9 @@ export default class Main extends Component {
       <View>
         <Text> textInComponent </Text>
         <Button
-          title="눌러봐"
+          title='눌러봐'
           onPress={() => {
-            this.props.navigation.navigate("nav");
+            this.props.navigation.navigate('nav');
           }}
         />
       </View>
