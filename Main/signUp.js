@@ -22,7 +22,7 @@ export default class SignUp extends React.Component {
       Crypto.CryptoDigestAlgorithm.SHA256,
       password
     );
-    await fetch("http://10.0.2.2:8000/user/signup/", {
+    await fetch("http://3.17.152.1:8000/user/signup/", {
       method: "POST",
       body: JSON.stringify({ email, nickname, password })
     })
@@ -57,7 +57,6 @@ export default class SignUp extends React.Component {
   };
 
   render() {
-    console.log("회원가입 페이지 상태", this.state);
     return (
       <View>
         <Input

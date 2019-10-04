@@ -4,6 +4,8 @@ import React from "react";
 
 import Credit from "./credit";
 import MypageMain from "./mypageMain";
+import SignIn from "../../Main/signIn";
+import SignUp from "../../Main/signUp";
 
 const StackOfMypage = createStackNavigator(
   {
@@ -12,13 +14,24 @@ const StackOfMypage = createStackNavigator(
     },
     credit: {
       screen: Credit
+    },
+    signin: {
+      screen: SignIn,
+      navigationOptions: {
+        header: null
+      }
+    },
+    signup: {
+      screen: SignUp,
+      navigationOptions: {
+        header: null
+      }
     }
   },
   {
     initialRouteName: "mypageMain"
   }
 );
-
 
 const MypageStack = createAppContainer(StackOfMypage);
 
