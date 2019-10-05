@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, Button, ScrollView, StyleSheet, AsyncStorage } from 'react-native';
 import Slider from 'react-native-slider';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,6 +15,7 @@ export default class Search extends Component {
       selectedModel: null,
       brandModelList: [],
       searchResult: null,
+      favoriteData: null,
     };
   }
 
@@ -28,37 +29,77 @@ export default class Search extends Component {
         temp.name = `${element.brand} - ${element.model}`
         return temp
       })
-      this.setState({brandModelList: brandModel})
+      this.setState({ brandModelList: brandModel })
   }
 
-    selectedBrandModel = async () => {
-      const searchData = await fetch('http://3.17.152.1:8000/api/search/', {
-      method: 'POST',
-      body: JSON.stringify({
-        min_price: 1000,
-        max_price: this.state.sliderPrice,
-        brand: this.state.selectedBrand,
-        model: this.state.selectedModel
-      })
+  selectedBrandModel = async () => {
+    let searchData = await fetch('http://10.0.2.2:8000/api/search/', {
+    method: 'POST',
+    body: JSON.stringify({
+      min_price: 1000,
+      max_price: this.state.sliderPrice,
+      brand: this.state.selectedBrand,
+      model: this.state.selectedModel
     })
-      .then(res => res.json())
-      .then(res => res)
-      .catch(err => console.error(err));
-      console.log("검색결과", searchData)
-      const result = {}
-      result.filtered_data = searchData
-      this.setState({
-        searchResult: result
-      })
+  })
+    .then(res => res.json())
+    .then(res => res)
+    .catch(err => console.error(err));
+    
+    const token = await AsyncStorage.getItem("token");
+      const favoriteData = await fetch('http://10.0.2.2:8000/user/favorite/info/', {
+      headers: { token }
+    }).then(res => res.json())
+    .then(res => res)
+    .catch(err => console.error(err))
+
+    const result = {}
+    searchData = searchData.map((el) => {
+    for(let i=0 ; i<favoriteData.length ; i++) {
+      if(favoriteData[i].id === el.id) {
+        el.isFavorite = true
+        break
+      } else {
+        el.isFavorite = false
+      }
+    } 
+    return el
+    })
+    result.filtered_data = searchData
+    this.setState({
+      searchResult: result, favoriteData
+    })
+  }
+
+  toggleFavorite = (id) => {
+    const clonedData = { ...this.state.searchResult}
+    clonedData.filtered_data = clonedData.filtered_data.map((el) => {
+      if(el.id === id) {
+        if(el.isFavorite === true) {
+          el.isFavorite = false
+        } else {
+          el.isFavorite = true
+        }
+      }
+      return el
+    })
+    const clonedFavoriteData = this.state.favoriteData.slice()
+    for(let i=0 ; i<clonedFavoriteData.length ; i++) {
+      if(clonedFavoriteData[i].id === id) {
+        clonedFavoriteData.splice(i, 1)
+      } 
     }
+    this.setState({
+      data: clonedData, 
+      favoriteData: clonedFavoriteData
+    })
+  }
+
 
   render() {
     const {
       sliderPrice,
-      selectedBrand,
-      selectedModel,
       brandModelList,
-      searchResult
     } = this.state;
 
     return (
@@ -124,7 +165,7 @@ export default class Search extends Component {
           onPress={() => this.selectedBrandModel()}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
-        {this.state.searchResult ? <ProductList data={this.state.searchResult} /> : <View><Text>브랜드와 모델을 선택해주세요</Text></View>  }
+        {this.state.searchResult ? <ProductList data={this.state.searchResult} toggleFavorite={this.toggleFavorite} /> : <View><Text>브랜드와 모델을 선택해주세요</Text></View>  }
         </ScrollView>
       </View>
 

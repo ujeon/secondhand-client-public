@@ -20,6 +20,7 @@ export default class SignIn extends React.Component {
       Crypto.CryptoDigestAlgorithm.SHA256,
       password
     );
+  
     await fetch("http://3.17.152.1:8000/user/signin/", {
       method: "POST",
       body: JSON.stringify({ email, password })
@@ -42,10 +43,10 @@ export default class SignIn extends React.Component {
   handleSignInBtn = async () => {
     await this.requestUserSignIn();
 
-    let token = await AsyncStorage.getItem("token");
+    const token = await AsyncStorage.getItem("token");
 
     if (this.state.isSignIn === true) {
-      let page = this.props.navigation.getParam("page", "mypageMain");
+      const page = this.props.navigation.getParam("page", "mypageMain");
 
       if (page) {
         this.props.navigation.navigate("mypageMain", { token });
