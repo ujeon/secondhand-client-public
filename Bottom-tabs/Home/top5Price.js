@@ -4,81 +4,41 @@ import { Text } from "react-native-svg";
 import { View } from "react-native";
 
 class Top5Price extends React.PureComponent {
+  constructor() {
+    super();
+    this.state = {
+      top5: [],
+      originData: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("http://3.17.152.1:8000/api/top5/")
+      .then(res => res.json())
+      .then(res => {
+        const color = ["red", "orange", "green", "yellow", "blue"];
+        this.setState({
+          originData: res.map(el => Object.assign({}, el))
+        });
+        for (const i in res) {
+          res[i].svg = {
+            fill: color[i]
+          };
+        }
+        this.setState({
+          top5: res
+        });
+        console.log(this.state.top5, this.state.originData);
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
-    const data = [
-      {
-        model: "XARI",
-        averge_price: 436043,
-        value: 120,
-        svg: {
-          fill: "red"
-        }
-      },
-      {
-        model: "MINI BUGGY",
-        averge_price: 103142,
-        value: 51,
-        svg: {
-          fill: "orange"
-        }
-      },
-      {
-        model: "URBO2",
-        averge_price: 85307,
-        value: 40,
-        svg: {
-          fill: "yellow"
-        }
-      },
-      {
-        model: "HARVEY",
-        averge_price: 304374,
-        value: 37,
-        svg: {
-          fill: "green"
-        }
-      },
-      {
-        model: "MOODD",
-        averge_price: 124225,
-        value: 36,
-        svg: {
-          fill: "blue"
-        }
-      }
-    ];
-
-    const data2 = [
-      {
-        model: "XARI",
-        averge_price: 436043,
-        value: 120
-      },
-      {
-        model: "MINI BUGGY",
-        averge_price: 103142,
-        value: 51
-      },
-      {
-        model: "URBO2",
-        averge_price: 85307,
-        value: 40
-      },
-      {
-        model: "HARVEY",
-        averge_price: 304374,
-        value: 37
-      },
-      {
-        model: "MOODD",
-        averge_price: 124225,
-        value: 36
-      }
-    ];
-
-    const CUT_OFF = data[0].averge_price;
-    const Labels = ({ x, y, bandwidth, data }) =>
-      data.map((value, index) => (
+    const CUT_OFF = this.state.originData[0]
+      ? this.state.originData[0].averge_price
+      : 0;
+    const Labels = ({ x, y, bandwidth }) =>
+      this.state.originData.map((value, index) => (
         <Text
           key={index}
           x={x(index) + bandwidth / 2}
@@ -95,12 +55,11 @@ class Top5Price extends React.PureComponent {
           {value.averge_price}
         </Text>
       ));
-
-    return (
+    return this.state.top5[0] ? (
       <View style={{ height: 200, padding: 20, margin: 20 }}>
         <BarChart
           style={{ height: 200 }}
-          data={data}
+          data={this.state.top5}
           gridMin={0}
           yAccessor={({ item }) => item.averge_price}
           contentInset={{ top: 20, bottom: 20 }}
@@ -109,13 +68,15 @@ class Top5Price extends React.PureComponent {
         </BarChart>
         <XAxis
           style={{ marginHorizontal: 0 }}
-          data={data2}
+          data={this.state.originData}
           formatLabel={(value, index) => {
-            return data2[index].model;
+            return this.state.originData[index].model;
           }}
           contentInset={{ left: 30, right: 30 }}
         />
       </View>
+    ) : (
+      <View />
     );
   }
 }

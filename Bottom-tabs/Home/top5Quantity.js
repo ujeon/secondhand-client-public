@@ -1,7 +1,7 @@
-import React from 'react';
-import { View } from 'react-native';
-import { BarChart, YAxis } from 'react-native-svg-charts';
-import { Text } from 'react-native-svg';
+import React from "react";
+import { View } from "react-native";
+import { BarChart, YAxis } from "react-native-svg-charts";
+import { Text } from "react-native-svg";
 
 class Top5Quantity extends React.PureComponent {
   constructor() {
@@ -12,10 +12,10 @@ class Top5Quantity extends React.PureComponent {
   }
 
   componentDidMount() {
-    fetch('http://3.17.152.1:8000/api/top5/')
+    fetch("http://3.17.152.1:8000/api/top5/")
       .then(res => res.json())
       .then(res => {
-        const color = ['red', 'orange', 'green', 'yellow', 'blue'];
+        const color = ["red", "orange", "green", "yellow", "blue"];
         for (const i in res) {
           res[i].svg = {
             fill: color[i]
@@ -37,17 +37,17 @@ class Top5Quantity extends React.PureComponent {
           x={v.quantity < CUT_OFF ? x(v.quantity) + 10 : x(v.quantity) - 15}
           y={y(index) + bandwidth / 2}
           fontSize={14}
-          fill={v.quantity >= CUT_OFF ? 'white' : 'black'}
-          alignmentBaseline='middle'
+          fill={v.quantity >= CUT_OFF ? "white" : "black"}
+          alignmentBaseline="middle"
         >
           {v.quantity}
         </Text>
       ));
 
-    return (
+    return this.state.top5[0] ? (
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: "row",
           height: 200,
           width: 250,
           paddingVertical: 16,
@@ -65,11 +65,11 @@ class Top5Quantity extends React.PureComponent {
                 ((this.state.top5.length - 1) * 2 - index) / 2
               ].model;
             }
-            return '';
+            return "";
           }}
           svg={{
             fontSize: 10,
-            fill: 'black'
+            fill: "black"
           }}
         />
         <BarChart
@@ -77,7 +77,7 @@ class Top5Quantity extends React.PureComponent {
           data={this.state.top5}
           horizontal={true}
           yAccessor={({ item }) => item.quantity}
-          svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
+          svg={{ fill: "rgba(134, 65, 244, 0.8)" }}
           contentInset={{ top: 10, bottom: 10 }}
           spacingInner={0.5}
           spacingOuter={0}
@@ -86,6 +86,8 @@ class Top5Quantity extends React.PureComponent {
           <Labels />
         </BarChart>
       </View>
+    ) : (
+      <View />
     );
   }
 }
