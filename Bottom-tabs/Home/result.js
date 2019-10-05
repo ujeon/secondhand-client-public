@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, ScrollView, Dimensions, AsyncStorage } from "react-native";
 import ProductList from "../components/productList";
-
+import AverageMonthly from "./averageMonthly";
 
 const { width } = Dimensions.get("window");
 
@@ -10,6 +10,7 @@ export default class Result extends Component {
     super(props);
     this.state = {
       data: null,
+      model: this.props.navigation.getParam("model")
       favoriteData: null
     };
   }
@@ -72,13 +73,10 @@ export default class Result extends Component {
   }
 
   render() {
-    if(this.state.data) {
+    if (this.state.data) {
       return (
         // NOTE 종단 스크롤 뷰 안에 횡단 스크롤 뷰를 넣으면 가로, 세로 스크롤 모두 가능!
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>저의 제목을 지어주세요</Text>
-          </View>
           <ScrollView
             style={styles.container}
             pagingEnabled={true}
@@ -94,21 +92,17 @@ export default class Result extends Component {
             }}
             showsHorizontalScrollIndicator={false}
           >
-            <View style={styles.view} />
-            <View style={styles.view} />
-            <View style={styles.view} />
-            <View style={styles.view} />
-            <View style={styles.view} />
+            <AverageMonthly model={this.state.model} />
           </ScrollView>
           <ProductList data={this.state.data} toggleFavorite={this.toggleFavorite}/>
         </ScrollView>
       );
     }
     return (
-    <View>
-      <Text>로딩중</Text>
-    </View>
-    )
+      <View>
+        <Text>로딩중</Text>
+      </View>
+    );
   }
 }
 

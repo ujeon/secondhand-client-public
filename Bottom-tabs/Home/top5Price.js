@@ -28,7 +28,6 @@ class Top5Price extends React.PureComponent {
         this.setState({
           top5: res
         });
-        console.log(this.state.top5, this.state.originData);
       })
       .catch(err => console.error(err));
   }

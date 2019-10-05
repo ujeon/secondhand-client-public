@@ -1,32 +1,34 @@
 import React, { Component } from "react";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, Text } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { showMessage } from "react-native-flash-message";
 
 export default class AverageMonthly extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       averageByMonth: []
     };
   }
 
   componentDidMount() {
-    fetch("http://3.17.152.1:8000/api/average/monthly/", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ model: "HARVEY" })
-    })
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          averageByMonth: res
-        });
+    if (this.props.model !== "etc") {
+      fetch("http://3.17.152.1:8000/api/average/monthly/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ model: this.props.model })
       })
-      .catch(err => console.error(err));
+        .then(res => res.json())
+        .then(res => {
+          this.setState({
+            averageByMonth: res
+          });
+        })
+        .catch(err => console.error(err));
+    }
   }
 
   render() {
@@ -34,19 +36,17 @@ export default class AverageMonthly extends Component {
       <View>
         <LineChart
           data={{
-            labels: this.state.averageByMonth.daily
-              .map(el => el.date)
-              .reverse(),
+            labels: this.state.averageByMonth.daily.map(el => el.date),
             datasets: [
               {
-                data: this.state.averageByMonth.daily
-                  .map(el => el.average_price)
-                  .reverse()
+                data: this.state.averageByMonth.daily.map(
+                  el => el.average_price
+                )
               }
             ]
           }}
-          width={Dimensions.get("window").width * 3} // from react-native
-          height={350}
+          width={Dimensions.get("window").width * 2} // from react-native
+          height={Dimensions.get("window").height * 0.4}
           yAxisLabel=""
           chartConfig={{
             backgroundColor: "#e26a00",
@@ -64,14 +64,24 @@ export default class AverageMonthly extends Component {
             marginVertical: 10,
             borderRadius: 16
           }}
-          //   onDataPointClick={({ value, getColor }) => {
-          //     showMessage({
-          //       message: `${value}`,
-          //       description: "You selected this value",
-          //       backgroundColor: getColor(0.9)
-          //     });
-          //   }}
         />
+        <View>
+          <Text>
+            {`최근 1달 내 평균 가격: ${String(
+              this.state.averageByMonth.average_price
+            ).slice(0, -3)},000 원`}
+          </Text>
+          <Text>
+            {`최근 1달 내 최저 가격: ${String(
+              this.state.averageByMonth.lowest_price
+            ).slice(0, -3)},000 원`}
+          </Text>
+          <Text>
+            {`최근 1달 내 최고 가격: ${String(
+              this.state.averageByMonth.highest_price
+            ).slice(0, -3)},000 원`}
+          </Text>
+        </View>
       </View>
     ) : (
       <View />
