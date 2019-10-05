@@ -68,7 +68,7 @@ const ProductList = props => {
                 size={40}
                 onPress={ async () => {
                   const token = await AsyncStorage.getItem('token')
-                  await fetch('http://10.0.2.2:8000/user/favorite/', {
+                  await fetch('http://3.17.152.1:8000/user/favorite/', {
                     method: 'POST',
                     headers: {
                       token

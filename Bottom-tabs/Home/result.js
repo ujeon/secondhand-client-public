@@ -24,7 +24,7 @@ export default class Result extends Component {
     .catch(err => console.error(err))
     
     const token = await AsyncStorage.getItem("token");
-    const favoriteData = await fetch('http://10.0.2.2:8000/user/favorite/info/', {
+    const favoriteData = await fetch('http://3.17.152.1:8000/user/favorite/info/', {
       headers: { token }
     }).then(res => res.json())
     .then(res => res)
