@@ -33,13 +33,14 @@ export default class Search extends Component {
   }
 
   selectedBrandModel = async () => {
+    console.log('스테이트', this.state)
     let searchData = await fetch('http://3.17.152.1:8000/api/search/', {
     method: 'POST',
     body: JSON.stringify({
       min_price: 1000,
       max_price: this.state.sliderPrice,
       brand: this.state.selectedBrand,
-      model: this.state.selectedModel
+      model: this.state.selectedModel,
     })
   })
     .then(res => res.json())
@@ -47,12 +48,15 @@ export default class Search extends Component {
     .catch(err => console.error(err));
     
     const token = await AsyncStorage.getItem("token");
-      const favoriteData = await fetch('http://3.17.152.1:8000/user/favorite/info/', {
-      headers: { token }
-    }).then(res => res.json())
-    .then(res => res)
-    .catch(err => console.error(err))
-
+    let favoriteData = []
+    if(token) {
+      favoriteData = await fetch('http://3.17.152.1:8000/user/favorite/info/', {
+        headers: { token }
+      }).then(res => res.json())
+      .then(res => res)
+      .catch(err => console.error(err))
+    }  
+    console.log('서치데이터', searchData)
     const result = {}
     searchData = searchData.map((el) => {
     for(let i=0 ; i<favoriteData.length ; i++) {
