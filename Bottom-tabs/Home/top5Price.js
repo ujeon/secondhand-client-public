@@ -1,7 +1,7 @@
-import React from "react";
-import { BarChart, XAxis } from "react-native-svg-charts";
-import { Text } from "react-native-svg";
-import { View } from "react-native";
+import React from 'react';
+import { BarChart, XAxis } from 'react-native-svg-charts';
+import { Text } from 'react-native-svg';
+import { View } from 'react-native';
 
 class Top5Price extends React.PureComponent {
   constructor() {
@@ -13,12 +13,12 @@ class Top5Price extends React.PureComponent {
   }
 
   componentDidMount() {
-    fetch("http://3.17.152.1:8000/api/top5/")
+    fetch('http://3.17.152.1:8000/api/top5/')
       .then(res => res.json())
       .then(res => {
-        const color = ["red", "orange", "green", "yellow", "blue"];
+        const color = ['red', 'orange', 'green', 'yellow', 'blue'];
         this.setState({
-          originData: res.map(el => Object.assign({}, el))
+          originData: res.map(el => ({ ...el}))
         });
         for (const i in res) {
           res[i].svg = {
@@ -47,9 +47,9 @@ class Top5Price extends React.PureComponent {
               : y(value.averge_price) + 15
           }
           fontSize={14}
-          fill={value.averge_price >= CUT_OFF ? "white" : "black"}
-          alignmentBaseline={"middle"}
-          textAnchor={"middle"}
+          fill={value.averge_price >= CUT_OFF ? 'white' : 'black'}
+          alignmentBaseline="middle"
+          textAnchor="middle"
         >
           {value.averge_price}
         </Text>
