@@ -201,6 +201,7 @@ class ProductList extends Component {
   }
 }
 
+
 const styles = StyleSheet.create({
   details: { flex: 1, flexDirection: 'row', marginBottom: '5%' },
   location: {
