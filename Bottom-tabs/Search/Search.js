@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import ProductList from "../components/productList";
 
 export default class Search extends Component {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
       sliderPrice: 1000,
@@ -26,6 +26,7 @@ export default class Search extends Component {
   }
 
   async componentDidMount() {
+    console.log("search props", this.props.screenProps);
     let brandModel = await fetch("http://3.17.152.1:8000/api/list/")
       .then(res => res.json())
       .then(res => res);

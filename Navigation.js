@@ -71,6 +71,10 @@ export default class Navigation extends Component {
     this.setState({ favoriteData });
   }
 
+  handleFavorite = () => {
+    console.log("done!");
+  };
+
   handleBackButtonClick() {
     if (this.exitApp === undefined || !this.exitApp) {
       ToastAndroid.show("한번 더 누르시면 종료됩니다.", ToastAndroid.SHORT);
@@ -91,8 +95,13 @@ export default class Navigation extends Component {
   }
 
   render() {
-    //REVIEW Nav에서 스테이트에 즐겨찾기를 저장하고, Home탭에 전달해주려고 하는데 전달되지 않음
-
-    return <BottomNav favoriteData={this.state.favoriteData} />;
+    return (
+      <BottomNav
+        screenProps={{
+          favoriteData: this.state.favoriteData,
+          handleFavorite: this.handleFavorite
+        }}
+      />
+    );
   }
 }
