@@ -41,13 +41,6 @@ export default class Navigation extends Component {
     );
   }
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener(
-      "hardwareBackPress",
-      this.handleBackButtonClick
-    );
-  }
-
   async componentDidMount() {
     const token = await AsyncStorage.getItem("token");
     let favoriteData;
@@ -71,8 +64,21 @@ export default class Navigation extends Component {
     this.setState({ favoriteData });
   }
 
-  handleFavorite = () => {
-    console.log("done!");
+  componentDidUpdate(prevProp, prevState) {
+    if (prevState.favoriteData !== this.state.favoriteData) {
+      this.setState({ favoriteData: this.state.favoriteData });
+    }
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+
+  handleFavorite = data => {
+    this.setState({ favoriteData: data });
   };
 
   handleBackButtonClick() {

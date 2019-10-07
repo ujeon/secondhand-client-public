@@ -1,38 +1,52 @@
 import React from "react";
-import { View, Text, StyleSheet, AsyncStorage } from "react-native";
+import { View, Text, AsyncStorage, ScrollView } from "react-native";
 
 import ProductList from "../components/productList";
 
 export default class Favorite extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       isSignIn: undefined,
-      favoriteData: []
+      favoriteData: {}
     };
   }
 
   async componentDidMount() {
-    console.log("favorite props", this.props.screenProps);
-    const token = await AsyncStorage.getItem("token");
-    if (token) {
-      let favoriteData = await AsyncStorage.getItem("favoriteData").then(res =>
-        JSON.parse(res)
-      );
+    this.onLoad();
+    console.log(this.state.isSignIn);
 
-      let temp = {};
-      temp.filtered_data = favoriteData;
+    // const favoriteData = this.props.screenProps.favoriteData;
+    // let temp = {};
+    // temp.filtered_data = favoriteData;
 
-      this.setState({
-        favoriteData: temp,
-        isSignIn: true
-      });
-    } else {
-      this.setState({
-        isSignIn: false
-      });
-    }
+    // this.setState({
+    //   favoriteData: temp
+    // });
   }
+
+  onLoad = () => {
+    this.props.navigation.addListener("willFocus", () => {
+      this.checkIsSignIn();
+      this.checkFavoriteStatus();
+    });
+  };
+
+  checkFavoriteStatus = () => {
+    let temp = {};
+    temp.filtered_data = this.props.screenProps.favoriteData;
+    this.setState({ favoriteData: temp });
+  };
+
+  checkIsSignIn = () => {
+    AsyncStorage.getItem("token", (err, result) => {
+      if (result !== null) {
+        this.setState({ isSignIn: true });
+      } else {
+        this.setState({ isSignIn: false });
+      }
+    });
+  };
 
   toggleFavorite = id => {
     const clonedFavoriteData = this.state.favoriteData.filtered_data.slice();
@@ -43,7 +57,7 @@ export default class Favorite extends React.Component {
       }
     }
 
-    AsyncStorage.setItem("favoriteData", JSON.stringify(clonedFavoriteData));
+    this.props.screenProps.handleFavorite(clonedFavoriteData);
 
     let temp = {};
     temp.filtered_data = clonedFavoriteData;
@@ -54,39 +68,20 @@ export default class Favorite extends React.Component {
   };
 
   render() {
-    if (this.state.isSignIn) {
+    if (this.state.isSignIn === true) {
       return (
-        <View style={styles.containter}>
-          <View style={styles.header}>
-            <Text>favorite tab</Text>
-          </View>
-          <View style={styles.content}>
-            <ProductList
-              data={this.state.favoriteData}
-              toggleFavorite={this.toggleFavorite}
-            />
-          </View>
-        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <ProductList
+            data={this.state.favoriteData}
+            toggleFavorite={this.toggleFavorite}
+          />
+        </ScrollView>
       );
     }
-
     return (
-      <View style={styles.containter}>
-        <View style={styles.header}>
-          <Text>favorite tab</Text>
-        </View>
-        <View style={styles.content}>
-          <Text>회원가입을 하시면 즐겨찾기 추가가 가능합니다.</Text>
-        </View>
+      <View>
+        <Text>회원가입을 하시면 즐겨찾기 추가가 가능합니다.</Text>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  containter: { flex: 1 },
-  header: { flex: 1, marginBottom: "5%", backgroundColor: "blue" },
-  content: {
-    flex: 5
-  }
-});
