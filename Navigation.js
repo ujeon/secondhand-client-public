@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BackHandler, ToastAndroid } from "react-native";
+import { BackHandler, ToastAndroid, AsyncStorage } from "react-native";
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import Favorite from "./Bottom-tabs/Favorite/Favorite";
@@ -31,6 +31,7 @@ export default class Navigation extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    this.state = { favoriteData: [] };
   }
 
   componentWillMount() {
@@ -45,6 +46,29 @@ export default class Navigation extends Component {
       "hardwareBackPress",
       this.handleBackButtonClick
     );
+  }
+
+  async componentDidMount() {
+    const token = await AsyncStorage.getItem("token");
+    let favoriteData;
+    if (token) {
+      favoriteData = await fetch("http://3.17.152.1:8000/user/favorite/info/", {
+        headers: { token }
+      })
+        .then(res => res.json())
+        .then(res => res)
+        .catch(err => console.error(err));
+      favoriteData = favoriteData.map(el => {
+        el.isFavorite = true;
+        return el;
+      });
+    } else {
+      favoriteData = [];
+    }
+
+    await AsyncStorage.setItem("favoriteData", JSON.stringify(favoriteData));
+
+    this.setState({ favoriteData });
   }
 
   handleBackButtonClick() {
@@ -67,6 +91,8 @@ export default class Navigation extends Component {
   }
 
   render() {
-    return <BottomNav />;
+    //REVIEW Nav에서 스테이트에 즐겨찾기를 저장하고, Home탭에 전달해주려고 하는데 전달되지 않음
+
+    return <BottomNav favoriteData={this.state.favoriteData} />;
   }
 }

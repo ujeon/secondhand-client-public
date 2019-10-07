@@ -33,16 +33,9 @@ export default class Result extends Component {
       .then(res => res)
       .catch(err => console.error(err));
 
-    const token = await AsyncStorage.getItem("token");
-    let favoriteData = [];
-    if (token) {
-      favoriteData = await fetch("http://3.17.152.1:8000/user/favorite/info/", {
-        headers: { token }
-      })
-        .then(res => res.json())
-        .then(res => res)
-        .catch(err => console.error(err));
-    }
+    let favoriteData = await AsyncStorage.getItem("favoriteData").then(res =>
+      JSON.parse(res)
+    );
 
     const filteredData = data.filtered_data.map(el => {
       for (let i = 0; i < favoriteData.length; i++) {
@@ -55,7 +48,9 @@ export default class Result extends Component {
       }
       return el;
     });
+
     data.filtered_data = filteredData;
+    
     this.setState({
       data,
       favoriteData
@@ -64,8 +59,13 @@ export default class Result extends Component {
 
   toggleFavorite = id => {
     const clonedData = { ...this.state.data };
+    const clonedFavoriteData = this.state.favoriteData.slice();
+    const favoriteIds = clonedFavoriteData.map(el => el.id);
+    let target;
+
     clonedData.filtered_data = clonedData.filtered_data.map(el => {
       if (el.id === id) {
+        target = el;
         if (el.isFavorite === true) {
           el.isFavorite = false;
         } else {
@@ -74,12 +74,15 @@ export default class Result extends Component {
       }
       return el;
     });
-    const clonedFavoriteData = this.state.favoriteData.slice();
-    for (let i = 0; i < clonedFavoriteData.length; i++) {
-      if (clonedFavoriteData[i].id === id) {
-        clonedFavoriteData.splice(i, 1);
-      }
+
+    if (favoriteIds.includes(target.id)) {
+      clonedFavoriteData.splice(favoriteIds.indexOf(target.id), 1);
+    } else {
+      clonedFavoriteData.push(target);
     }
+
+    AsyncStorage.setItem("favoriteData", JSON.stringify(clonedFavoriteData));
+
     this.setState({
       data: clonedData,
       favoriteData: clonedFavoriteData

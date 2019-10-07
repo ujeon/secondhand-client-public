@@ -20,7 +20,7 @@ export default class SignIn extends React.Component {
       Crypto.CryptoDigestAlgorithm.SHA256,
       password
     );
-  
+
     await fetch("http://3.17.152.1:8000/user/signin/", {
       method: "POST",
       body: JSON.stringify({ email, password })

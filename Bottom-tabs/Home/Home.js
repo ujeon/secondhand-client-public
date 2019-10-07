@@ -20,7 +20,8 @@ const StackNav = createStackNavigator(
 
 const HomeStack = createAppContainer(StackNav);
 
-const Home = () => {
+const Home = props => {
+  //REVIEW Nav에서 프롭이 전달되지 않음
   return <HomeStack />;
 };
 
