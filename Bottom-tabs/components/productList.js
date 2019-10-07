@@ -18,57 +18,19 @@ class ProductList extends Component {
 
     this.state = {
       currentLocation: {},
-      data: this.props.data,
+      data: null,
       selectedValue: "최신순"
     };
   }
 
   async componentDidMount() {
     await this.getLocationAsync();
-    const stateData = this.state.data;
-    stateData.filtered_data.sort(
-      (a, b) => new Date(b.posted_at) - new Date(a.posted_at)
-    );
-    const sortedData = stateData.filtered_data.map(async data => {
-      try {
-        if (data.location !== "-") {
-          const arrLoc = data.location.split("-");
-          const distance = this.getDistanceFromLatLonInKm(
-            this.state.currentLocation.latitude,
-            this.state.currentLocation.longitude,
-            Number(arrLoc[0]),
-            Number(arrLoc[1])
-          );
-          data.distance = distance;
-          // 여기에서 좌표를 동으로 바꿔준다.
-          const address = await this.getActualAddress(
-            Number(arrLoc[0]),
-            Number(arrLoc[1])
-          );
-
-          data.address = address;
-
-          console.log(data);
-          return data;
-        }
-
-        data.distance = Infinity;
-        return data;
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    stateData.filtered_data = sortedData;
-
-    this.setState({
-      data: stateData
-    });
+    await this.refineData();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) {
-      this.setState({ data: this.props.data });
+      this.refineData();
     }
   }
 
@@ -149,12 +111,61 @@ class ProductList extends Component {
     }
   };
 
+  refineData = async () => {
+    const stateData = this.props.data;
+    stateData.filtered_data.sort(
+      (a, b) => new Date(b.posted_at) - new Date(a.posted_at)
+    );
+
+    const sortedData = await Promise.all(
+      stateData.filtered_data.map(async data => {
+        try {
+          if (data.location !== "-") {
+            const arrLoc = data.location.split("-");
+            const distance = this.getDistanceFromLatLonInKm(
+              this.state.currentLocation.latitude,
+              this.state.currentLocation.longitude,
+              Number(arrLoc[0]),
+              Number(arrLoc[1])
+            );
+            data.distance = distance;
+            // 여기에서 좌표를 동으로 바꿔준다.
+            const address = await this.getActualAddress(
+              Number(arrLoc[0]),
+              Number(arrLoc[1])
+            );
+
+            data.address = address;
+            return data;
+          }
+
+          data.distance = Infinity;
+          return data;
+        } catch (err) {
+          console.error(err);
+        }
+      })
+    ).then(res => res);
+
+    stateData.filtered_data = sortedData;
+
+    this.setState({
+      data: stateData
+    });
+  };
+
   render() {
     let list;
     let averagePrice;
     if (this.state.data) {
       list = this.state.data.filtered_data;
       averagePrice = this.state.data.average_price;
+    } else {
+      return (
+        <View>
+          <Text>결과를 가져오는 중입니다. 잠시만 기다려주세요.</Text>
+        </View>
+      );
     }
 
     return (
@@ -195,14 +206,14 @@ class ProductList extends Component {
           let location;
           l.location === "-"
             ? (location = "지역정보 없음")
-            : (location = l.address);
+            : (location = `${l.address} ${parseInt(l.distance)}km`);
 
           // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘
           let favoriteIcon;
           l.isFavorite
             ? (favoriteIcon = "favorite")
             : (favoriteIcon = "favorite-border");
-          console.log(l.id);
+          console.log(l);
           return (
             <ListItem
               key={l.id}
