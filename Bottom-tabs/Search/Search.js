@@ -2,21 +2,21 @@ import React, { Component } from "react";
 import {
   Text,
   View,
-  Button,
   ScrollView,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions
 } from "react-native";
+import { Button } from "react-native-elements";
 import Slider from "react-native-slider";
 import SearchableDropdown from "react-native-searchable-dropdown";
-import Icon from "react-native-vector-icons/FontAwesome";
 import ProductList from "../components/productList";
 
 export default class Search extends Component {
   constructor(props) {
     super();
     this.state = {
-      sliderPrice: 1000,
+      sliderPrice: 20000,
       selectedBrand: null,
       selectedModel: null,
       brandModelList: [],
@@ -26,7 +26,6 @@ export default class Search extends Component {
   }
 
   async componentDidMount() {
-    console.log("search props", this.props.screenProps);
     let brandModel = await fetch("http://3.17.152.1:8000/api/list/")
       .then(res => res.json())
       .then(res => res);
@@ -43,7 +42,7 @@ export default class Search extends Component {
     let searchData = await fetch("http://3.17.152.1:8000/api/search/", {
       method: "POST",
       body: JSON.stringify({
-        min_price: 1000,
+        min_price: 20000,
         max_price: this.state.sliderPrice,
         brand: this.state.selectedBrand,
         model: this.state.selectedModel
@@ -115,20 +114,22 @@ export default class Search extends Component {
 
     return (
       <View style={styles.container}>
+        <Text style={styles.title}>SEARCH</Text>
         <Text>원하는 가격범위를 설정해 주세요</Text>
         <Slider
-          style={{ width: 350, height: 40 }}
-          minimumValue={1000}
+          style={{ width: Dimensions.get("screen").width - 45 }}
+          minimumValue={20000}
           maximumValue={1000000}
-          step={1000}
+          step={10000}
           value={sliderPrice}
           onValueChange={select => {
             this.setState({
               sliderPrice: select
             });
           }}
-          minimumTrackTintColor="#000"
-          maximumTrackTintColor="#ccc"
+          minimumTrackTintColor="#1e3799"
+          maximumTrackTintColor="#6a89cc"
+          thumbTintColor="#000"
         />
         <Text>{sliderPrice}원 미만</Text>
         <SearchableDropdown
@@ -142,17 +143,17 @@ export default class Search extends Component {
               selectedModel: model
             });
           }}
-          containerStyle={{ padding: 5 }}
+          containerStyle={{ padding: 5, marginTop: 30 }}
           itemStyle={{
             padding: 10,
-            marginTop: 2,
+            marginTop: 5,
             backgroundColor: "#fff",
-            borderColor: "#00a8ff",
+            borderColor: "#6a89cc",
             borderWidth: 1,
-            borderRadius: 5
+            borderRadius: 10
           }}
-          itemTextStyle={{ color: "#222" }}
-          itemsContainerStyle={{ maxHeight: 140 }}
+          itemTextStyle={{ color: "#000" }}
+          itemsContainerStyle={{ maxHeight: 300 }}
           items={brandModelList}
           resetValue={false}
           textInputProps={{
@@ -160,9 +161,9 @@ export default class Search extends Component {
             underlineColorAndroid: "transparent",
             style: {
               padding: 12,
-              borderWidth: 1,
-              borderColor: "#2f3640",
-              borderRadius: 5
+              borderWidth: 1.5,
+              borderColor: "#1e3799",
+              borderRadius: 10
             }
           }}
           listProps={{
@@ -170,10 +171,12 @@ export default class Search extends Component {
           }}
         />
         <Button
-          icon={<Icon name="search" size={15} color="white" />}
-          title="검색"
-          iconRight={true}
+          title="검   색"
           onPress={() => this.selectedBrandModel()}
+          buttonStyle={{
+            backgroundColor: "#6a89cc",
+            height: 50
+          }}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           {this.state.searchResult ? (
@@ -182,8 +185,16 @@ export default class Search extends Component {
               toggleFavorite={this.toggleFavorite}
             />
           ) : (
-            <View>
-              <Text>브랜드와 모델을 선택해주세요</Text>
+            <View style={{ height: 200 }}>
+              <Text
+                style={{
+                  position: "relative",
+                  top: 100,
+                  left: Dimensions.get("screen").width / 3.5
+                }}
+              >
+                브랜드와 모델을 선택해주세요.
+              </Text>
             </View>
           )}
         </ScrollView>
@@ -196,6 +207,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 20,
-    justifyContent: "center"
+    justifyContent: "center",
+    marginTop: 80
+  },
+  title: {
+    fontSize: 50,
+    color: "#6a89cc",
+    position: "relative",
+    top: -40
   }
 });

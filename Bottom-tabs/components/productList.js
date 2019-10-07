@@ -213,7 +213,7 @@ class ProductList extends Component {
           l.isFavorite
             ? (favoriteIcon = "favorite")
             : (favoriteIcon = "favorite-border");
-          console.log(l);
+
           return (
             <ListItem
               key={l.id}
