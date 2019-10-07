@@ -29,6 +29,7 @@ class Top5Quantity extends React.PureComponent {
         });
       })
       .catch(err => console.error(err));
+    this.props.changeState();
   }
 
   render() {
