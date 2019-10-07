@@ -25,7 +25,11 @@ const MainStackNav = createStackNavigator(
     }
   },
   {
-    initialRouteName: "signin"
+    initialRouteName: "signin",
+    headerMode: "none",
+    navigationOptions: {
+      headerVisible: false
+    }
   }
 );
 

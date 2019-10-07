@@ -1,7 +1,16 @@
 import React from "react";
-import { View, Button, AsyncStorage } from "react-native";
-import { Input, Icon } from "react-native-elements";
+import {
+  View,
+  AsyncStorage,
+  StyleSheet,
+  Image,
+  Text,
+  Dimensions
+} from "react-native";
+import { Input, Icon, Button } from "react-native-elements";
 import * as Crypto from "expo-crypto";
+
+const { width, height } = Dimensions.get("window");
 
 export default class SignIn extends React.Component {
   constructor() {
@@ -58,18 +67,41 @@ export default class SignIn extends React.Component {
   };
 
   render() {
+    console.log(width, height);
     return (
-      <View>
+      <View style={styles.container}>
+        <Image
+          style={{
+            width: width * 0.8,
+            height: height * 0.25,
+            alignSelf: "center",
+            top: -30
+          }}
+          source={require("./logo.png")}
+          resizeMode="contain"
+        />
         <Input
           onChangeText={email =>
             this.setState({
               email
             })
           }
-          placeholder="   E-mail"
+          placeholder="  E-mail"
+          placeholderTextColor="#ffcccc"
           leftIcon={
-            <Icon name="envelope" size={24} color="grey" type="font-awesome" />
+            <Icon
+              name="envelope"
+              size={18}
+              color="#972DDE"
+              type="font-awesome"
+              containerStyle={{
+                marginRight: 10
+              }}
+            />
           }
+          inputContainerStyle={{
+            borderBottomColor: "#972DDE"
+          }}
         />
         <Input
           onChangeText={password =>
@@ -77,17 +109,35 @@ export default class SignIn extends React.Component {
               password
             })
           }
-          placeholder="   Password"
+          placeholder="  Password"
+          placeholderTextColor="#ffcccc"
           errorMessage={this.state.errMsg}
           secureTextEntry={true}
           leftIcon={
-            <Icon name="lock" size={26} color="grey" type="font-awesome" />
+            <Icon
+              name="lock"
+              size={26}
+              color="#972DDE"
+              type="font-awesome"
+              containerStyle={{
+                marginRight: 10
+              }}
+            />
           }
+          inputContainerStyle={{
+            borderBottomColor: "#972DDE"
+          }}
         />
         <Button
           title="로그인"
           onPress={() => {
             this.handleSignInBtn();
+          }}
+          buttonStyle={{
+            backgroundColor: "#972DDE",
+            height: 50,
+            marginTop: 20,
+            marginBottom: 5
           }}
         />
         <Button
@@ -97,8 +147,33 @@ export default class SignIn extends React.Component {
               greeting: "Hallo"
             })
           }
+          buttonStyle={{
+            backgroundColor: "#972DDE",
+            height: 50
+          }}
         />
+        <Text
+          style={{
+            alignSelf: "center",
+            marginTop: height * 0.15,
+            color: "#972DDE"
+          }}
+        >
+          copyright @ 2019
+        </Text>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F4E632",
+    padding: 20,
+    paddingBottom: height * 0.05,
+    borderWidth: 1,
+    borderColor: "red"
+  }
+});
