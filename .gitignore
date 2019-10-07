@@ -11,3 +11,4 @@ web-build/
 web-report/
 .idea
 /Bottom-tabs/components/env.js
+.DS_Store
