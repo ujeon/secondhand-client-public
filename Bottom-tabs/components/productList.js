@@ -10,6 +10,7 @@ import {
 import { ListItem, Icon } from "react-native-elements";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import env from "./env";
 
 class ProductList extends Component {
   constructor(props) {
@@ -28,21 +29,33 @@ class ProductList extends Component {
     stateData.filtered_data.sort(
       (a, b) => new Date(b.posted_at) - new Date(a.posted_at)
     );
-    const sortedData = this.state.data.filtered_data.map(data => {
-      if (data.location !== "-") {
-        const arrLoc = data.location.split("-");
-        const distance = this.getDistanceFromLatLonInKm(
-          this.state.currentLocation.latitude,
-          this.state.currentLocation.longitude,
-          Number(arrLoc[0]),
-          Number(arrLoc[1])
-        );
-        data.distance = distance;
-        return data;
-      }
-      if (data.location === "-") {
+    const sortedData = stateData.filtered_data.map(async data => {
+      try {
+        if (data.location !== "-") {
+          const arrLoc = data.location.split("-");
+          const distance = this.getDistanceFromLatLonInKm(
+            this.state.currentLocation.latitude,
+            this.state.currentLocation.longitude,
+            Number(arrLoc[0]),
+            Number(arrLoc[1])
+          );
+          data.distance = distance;
+          // 여기에서 좌표를 동으로 바꿔준다.
+          const address = await this.getActualAddress(
+            Number(arrLoc[0]),
+            Number(arrLoc[1])
+          );
+
+          data.address = address;
+
+          console.log(data);
+          return data;
+        }
+
         data.distance = Infinity;
         return data;
+      } catch (err) {
+        console.error(err);
       }
     });
 
@@ -108,6 +121,28 @@ class ProductList extends Component {
     });
   };
 
+  getActualAddress = async (lat, long) => {
+    try {
+      const address = await fetch(
+        `https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=${long},${lat}&orders=legalcode&output=json`,
+        {
+          method: "GET",
+          headers: {
+            "X-NCP-APIGW-API-KEY-ID": env.ID,
+            "X-NCP-APIGW-API-KEY": env.KEY
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(res => res)
+        .catch(err => err);
+      const location = `${address.results[0].region.area2.name} ${address.results[0].region.area3.name}`;
+      return location;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   render() {
     let filteredData;
     let averagePrice;
@@ -156,14 +191,14 @@ class ProductList extends Component {
           let location;
           l.location === "-"
             ? (location = "지역정보 없음")
-            : (location = l.location);
+            : (location = l.address);
 
           // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘
           let favoriteIcon;
           l.isFavorite
             ? (favoriteIcon = "favorite")
             : (favoriteIcon = "favorite-border");
-
+          console.log(l.id);
           return (
             <ListItem
               key={l.id}
