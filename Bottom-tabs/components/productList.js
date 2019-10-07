@@ -155,6 +155,7 @@ class ProductList extends Component {
   };
 
   render() {
+    console.log("렌더링");
     let list;
     let averagePrice;
     if (this.state.data) {
@@ -242,7 +243,9 @@ class ProductList extends Component {
                   size={40}
                   onPress={async () => {
                     const token = await AsyncStorage.getItem("token");
+
                     this.props.toggleFavorite(l.id);
+
                     if (token) {
                       fetch("http://3.17.152.1:8000/user/favorite/", {
                         method: "POST",

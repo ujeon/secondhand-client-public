@@ -1,7 +1,9 @@
-import React from 'react';
-import { BarChart, XAxis } from 'react-native-svg-charts';
-import { Text } from 'react-native-svg';
-import { View } from 'react-native';
+import React from "react";
+import { BarChart, XAxis } from "react-native-svg-charts";
+import { Text } from "react-native-svg";
+import { View, Dimensions } from "react-native";
+
+const { height } = Dimensions.get("window");
 
 class Top5Price extends React.PureComponent {
   constructor() {
@@ -13,12 +15,12 @@ class Top5Price extends React.PureComponent {
   }
 
   componentDidMount() {
-    fetch('http://3.17.152.1:8000/api/top5/')
+    fetch("http://3.17.152.1:8000/api/top5/")
       .then(res => res.json())
       .then(res => {
-        const color = ['red', 'orange', 'green', 'yellow', 'blue'];
+        const color = ["#82ccdd", "#fad390", "#b8e994", "#6a89cc", "#f8c291"];
         this.setState({
-          originData: res.map(el => ({ ...el}))
+          originData: res.map(el => ({ ...el }))
         });
         for (const i in res) {
           res[i].svg = {
@@ -44,10 +46,10 @@ class Top5Price extends React.PureComponent {
           y={
             value.averge_price < CUT_OFF
               ? y(value.averge_price) - 10
-              : y(value.averge_price) + 15
+              : y(value.averge_price) + 20
           }
-          fontSize={14}
-          fill={value.averge_price >= CUT_OFF ? 'white' : 'black'}
+          fontSize={15}
+          fill="black"
           alignmentBaseline="middle"
           textAnchor="middle"
         >
@@ -55,13 +57,15 @@ class Top5Price extends React.PureComponent {
         </Text>
       ));
     return this.state.top5[0] ? (
-      <View style={{ height: 200, padding: 20, margin: 20 }}>
+      <View>
         <BarChart
-          style={{ height: 200 }}
+          style={{ height: height * 0.5 }}
           data={this.state.top5}
           gridMin={0}
           yAccessor={({ item }) => item.averge_price}
           contentInset={{ top: 20, bottom: 20 }}
+          spacingInner={0.5}
+          spacingOuter={0.3}
         >
           <Labels />
         </BarChart>
@@ -71,7 +75,7 @@ class Top5Price extends React.PureComponent {
           formatLabel={(value, index) => {
             return this.state.originData[index].model;
           }}
-          contentInset={{ left: 30, right: 30 }}
+          contentInset={{ left: 37, right: 36 }}
         />
       </View>
     ) : (

@@ -1,18 +1,11 @@
 import React, { Component } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  AsyncStorage
-} from "react-native";
+import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import ProductList from "../components/productList";
 import AverageMonthly from "./averageMonthly";
 
 const { width } = Dimensions.get("window");
 
-export default class Result extends Component {
+class Result extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +16,6 @@ export default class Result extends Component {
   }
 
   async componentDidMount() {
-    console.log("result page props", this.props.screenProps);
     const brand = this.props.navigation.getParam("brand");
     const model = this.props.navigation.getParam("model");
 
@@ -34,10 +26,7 @@ export default class Result extends Component {
       .then(res => res)
       .catch(err => console.error(err));
 
-    let favoriteData = await AsyncStorage.getItem("favoriteData").then(res =>
-      JSON.parse(res)
-    );
-
+    const favoriteData = this.props.screenProps.favoriteData;
     const filteredData = data.filtered_data.map(el => {
       for (let i = 0; i < favoriteData.length; i++) {
         if (favoriteData[i].id === el.id) {
@@ -82,7 +71,7 @@ export default class Result extends Component {
       clonedFavoriteData.push(target);
     }
 
-    AsyncStorage.setItem("favoriteData", JSON.stringify(clonedFavoriteData));
+    this.props.screenProps.handleFavorite(clonedFavoriteData);
 
     this.setState({
       data: clonedData,
@@ -126,6 +115,8 @@ export default class Result extends Component {
     );
   }
 }
+
+export default Result;
 
 const styles = StyleSheet.create({
   container: {},

@@ -3,9 +3,9 @@ import { View, Picker, ScrollView, StyleSheet, Dimensions } from "react-native";
 import { Button } from "react-native-elements";
 import Top5Quantity from "./top5Quantity";
 import Top5Price from "./top5Price";
-import AverageMonthly from "./averageMonthly";
 
 const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 export default class Select extends Component {
   constructor(props) {
@@ -75,29 +75,33 @@ export default class Select extends Component {
           <View style={styles.view}>
             <Top5Price />
           </View>
-          <Top5Quantity />
+          <View style={styles.view}>
+            <Top5Quantity />
+          </View>
         </ScrollView>
 
-        <Picker
-          selectedValue={this.state.selectedBrand}
-          style={{ height: 50, width: 200 }}
-          onValueChange={itemValue => this.selectBrand(itemValue)}
-        >
-          {this.state.brand.map(brand => (
-            <Picker.Item label={brand} value={brand} key={brand} />
-          ))}
-        </Picker>
-        <Picker
-          selectedValue={this.state.selectedModel}
-          style={{ height: 50, width: 200 }}
-          onValueChange={itemValue =>
-            this.setState({ selectedModel: itemValue })
-          }
-        >
-          {this.state.model.map(model => (
-            <Picker.Item label={model} value={model} key={model} />
-          ))}
-        </Picker>
+        <View style={{ width, flex: 1, flexDirection: "row" }}>
+          <Picker
+            selectedValue={this.state.selectedBrand}
+            style={{ height: 50, width: 200 }}
+            onValueChange={itemValue => this.selectBrand(itemValue)}
+          >
+            {this.state.brand.map(brand => (
+              <Picker.Item label={brand} value={brand} key={brand} />
+            ))}
+          </Picker>
+          <Picker
+            selectedValue={this.state.selectedModel}
+            style={{ height: 50, width: 200 }}
+            onValueChange={itemValue =>
+              this.setState({ selectedModel: itemValue })
+            }
+          >
+            {this.state.model.map(model => (
+              <Picker.Item label={model} value={model} key={model} />
+            ))}
+          </Picker>
+        </View>
         <Button title="조건 선택" onPress={this.goResult} />
       </ScrollView>
     );
@@ -114,10 +118,9 @@ const styles = StyleSheet.create({
   },
   view: {
     marginTop: "1.5%",
-    backgroundColor: "#2e2e2e",
-    width: width - 80,
-    margin: 10,
-    height: 300,
+    width,
+    marginRight: 5,
+    height: height * 0.55,
     borderRadius: 10,
     paddingHorizontal: 30
   }
