@@ -38,12 +38,6 @@ export default class Search extends Component {
     this.setState({ brandModelList: brandModel });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.searchResult !== this.state.searchResult) {
-      this.setState({ searchResult: this.state.searchResult });
-    }
-  }
-
   selectedBrandModel = async () => {
     let searchData = await fetch("http://3.17.152.1:8000/api/search/", {
       method: "POST",

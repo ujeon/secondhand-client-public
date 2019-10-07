@@ -53,6 +53,12 @@ class ProductList extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data) {
+      this.setState({ data: this.props.data });
+    }
+  }
+
   getLocationAsync = async () => {
     await Permissions.askAsync(Permissions.LOCATION);
 
@@ -109,14 +115,12 @@ class ProductList extends Component {
   };
 
   render() {
-    let filteredData;
+    let list;
     let averagePrice;
     if (this.state.data) {
-      filteredData = this.state.data.filtered_data;
+      list = this.state.data.filtered_data;
       averagePrice = this.state.data.average_price;
     }
-
-    const list = filteredData;
 
     return (
       <View>
