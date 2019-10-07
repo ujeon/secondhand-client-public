@@ -23,6 +23,7 @@ export default class Result extends Component {
   }
 
   async componentDidMount() {
+    console.log("result page props", this.props.screenProps);
     const brand = this.props.navigation.getParam("brand");
     const model = this.props.navigation.getParam("model");
 
@@ -50,7 +51,7 @@ export default class Result extends Component {
     });
 
     data.filtered_data = filteredData;
-    
+
     this.setState({
       data,
       favoriteData

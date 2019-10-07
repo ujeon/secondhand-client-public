@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, AsyncStorage } from "react-native";
 import ProductList from "../components/productList";
 
 export default class Favorite extends React.Component {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
       isSignIn: undefined,
@@ -13,6 +13,7 @@ export default class Favorite extends React.Component {
   }
 
   async componentDidMount() {
+    console.log("favorite props", this.props.screenProps);
     const token = await AsyncStorage.getItem("token");
     if (token) {
       let favoriteData = await AsyncStorage.getItem("favoriteData").then(res =>
