@@ -1,16 +1,24 @@
-import React, { Component } from 'react';
-import { View, Text, Linking, StyleSheet, Picker } from 'react-native';
-import { ListItem, Icon } from 'react-native-elements';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
+import React, { Component } from "react";
+import {
+  View,
+  Text,
+  Linking,
+  StyleSheet,
+  Picker,
+  AsyncStorage
+} from "react-native";
+import { ListItem, Icon } from "react-native-elements";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
 
 class ProductList extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       currentLocation: {},
       data: this.props.data,
-      selectedValue: '최신순'
+      selectedValue: "최신순"
     };
   }
 
@@ -21,8 +29,8 @@ class ProductList extends Component {
       (a, b) => new Date(b.posted_at) - new Date(a.posted_at)
     );
     const sortedData = this.state.data.filtered_data.map(data => {
-      if (data.location !== '-') {
-        const arrLoc = data.location.split('-');
+      if (data.location !== "-") {
+        const arrLoc = data.location.split("-");
         const distance = this.getDistanceFromLatLonInKm(
           this.state.currentLocation.latitude,
           this.state.currentLocation.longitude,
@@ -32,7 +40,7 @@ class ProductList extends Component {
         data.distance = distance;
         return data;
       }
-      if (data.location === '-') {
+      if (data.location === "-") {
         data.distance = Infinity;
         return data;
       }
@@ -84,15 +92,15 @@ class ProductList extends Component {
       selectedValue: e
     });
     const stateData = this.state.data;
-    if (e === '최신순') {
+    if (e === "최신순") {
       stateData.filtered_data.sort(
         (a, b) => new Date(b.posted_at) - new Date(a.posted_at)
       );
-    } else if (e === '가격내림차순') {
+    } else if (e === "가격내림차순") {
       stateData.filtered_data.sort((a, b) => b.price - a.price);
-    } else if (e === '가격오름차순') {
+    } else if (e === "가격오름차순") {
       stateData.filtered_data.sort((a, b) => a.price - b.price);
-    } else if (e === '거리순') {
+    } else if (e === "거리순") {
       stateData.filtered_data.sort((a, b) => a.distance - b.distance);
     }
     this.setState({
@@ -101,38 +109,14 @@ class ProductList extends Component {
   };
 
   render() {
-    // NOTE 어느 리스트를 전달 받는지에 따라 변수 할당을 다르게 합니다. (즐겨찾기 리스트인지, 제품 검색 결과인지)
     let filteredData;
     let averagePrice;
-    let favoriteList;
     if (this.state.data) {
       filteredData = this.state.data.filtered_data;
       averagePrice = this.state.data.average_price;
-    } else if (this.state.favoriteList) {
-      favoriteList = this.state.favoriteList;
     }
 
-    // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘(prop으로 전달 받아야 함)
-    // FIXED 빈 하트 아이콘 로딩이 안되요 ㅠㅠ
-    const isFavorite = false;
-    let favoriteIcon;
-    isFavorite
-      ? (favoriteIcon = 'favorite')
-      : (favoriteIcon = 'favorite-border');
-
-    // NOTE average_price 변수가 존재하면 해당 객체에 존재하는 평균가격을 할당하고, 그렇지 않으면 '정보 없음' 이라고 표시합니다.
-    let average;
-    averagePrice
-      ? (average = averagePrice.average_price)
-      : (average = '정보 없음');
-
-    // NOTE filteredData(검색 결과)가 존재하면 list 변수는 filteredData를 할당받고, favoriteList(즐겨찾기)가 존재하면 list는 favoriteList를 할당받습니다.
-    let list;
-    if (filteredData) {
-      list = filteredData;
-    } else {
-      list = favoriteList;
-    }
+    const list = filteredData;
 
     return (
       <View>
@@ -141,25 +125,44 @@ class ProductList extends Component {
           style={{ height: 50, width: 200 }}
           onValueChange={itemValue => this.sortResultData(itemValue)}
         >
-          <Picker.Item label='최신순' value='최신순' key='최신순' />
+          <Picker.Item label="최신순" value="최신순" key="최신순" />
           <Picker.Item
-            label='가격오름차순'
-            value='가격오름차순'
-            key='가격오름차순'
+            label="가격오름차순"
+            value="가격오름차순"
+            key="가격오름차순"
           />
           <Picker.Item
-            label='가격내림차순'
-            value='가격내림차순'
-            key='가격내림차순'
+            label="가격내림차순"
+            value="가격내림차순"
+            key="가격내림차순"
           />
-          <Picker.Item label='거리순' value='거리순' key='거리순' />
+          <Picker.Item label="거리순" value="거리순" key="거리순" />
         </Picker>
         {list.map(l => {
+          // NOTE average_price 변수가 존재하면 해당 객체에 존재하는 평균가격을 할당하고, 그렇지 않으면 '정보 없음' 이라고 표시합니다.
+          let average;
+
+          if (averagePrice) {
+            averagePrice
+              ? (average = averagePrice.average_price)
+              : (average = "정보 없음");
+          } else {
+            l.average_price
+              ? (average = l.average_price)
+              : (average = "정보 없음");
+          }
+
           // NOTE 데이터에 지역정보가 존재하면 해당 지역을 표시하고, 그렇지 않은 경우 대체 문구를 표시합니다.
           let location;
-          l.location === '-'
-            ? (location = '지역정보 없음')
+          l.location === "-"
+            ? (location = "지역정보 없음")
             : (location = l.location);
+
+          // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘
+          let favoriteIcon;
+          l.isFavorite
+            ? (favoriteIcon = "favorite")
+            : (favoriteIcon = "favorite-border");
 
           return (
             <ListItem
@@ -170,7 +173,7 @@ class ProductList extends Component {
                 <View>
                   <Text>{`판매가: ${l.price} / 평균가: ${average}`}</Text>
                   <View style={styles.details}>
-                    <Icon name='md-pin' type='ionicon' size={18} />
+                    <Icon name="md-pin" type="ionicon" size={18} />
                     <View style={styles.location}>
                       <Text>{location}</Text>
                     </View>
@@ -184,12 +187,20 @@ class ProductList extends Component {
               rightIcon={
                 <Icon
                   name={favoriteIcon}
-                  type='material'
-                  color='#f9b0c3'
+                  type="material"
+                  color="#f9b0c3"
                   size={40}
-                  onPress={() =>
-                    console.log('즐겨 찾기 상태를 변경해야 합니다.')
-                  }
+                  onPress={async () => {
+                    const token = await AsyncStorage.getItem("token");
+                    this.props.toggleFavorite(l.id);
+                    if (token) {
+                      fetch("http://3.17.152.1:8000/user/favorite/", {
+                        method: "POST",
+                        headers: { token },
+                        body: JSON.stringify({ list_id: l.id })
+                      });
+                    }
+                  }}
                 />
               }
               bottomDivider
@@ -201,18 +212,17 @@ class ProductList extends Component {
   }
 }
 
-
 const styles = StyleSheet.create({
-  details: { flex: 1, flexDirection: 'row', marginBottom: '5%' },
+  details: { flex: 1, flexDirection: "row", marginBottom: "5%" },
   location: {
     flex: 1,
-    justifyContent: 'space-between',
-    marginLeft: '1%'
+    justifyContent: "space-between",
+    marginLeft: "1%"
   },
   market: {
     flex: 1,
-    justifyContent: 'space-between',
-    width: '50%'
+    justifyContent: "space-between",
+    width: "50%"
   }
 });
 
