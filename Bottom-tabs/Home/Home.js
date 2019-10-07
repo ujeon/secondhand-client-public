@@ -21,7 +21,6 @@ const StackNav = createStackNavigator(
 const HomeStack = createAppContainer(StackNav);
 
 const Home = props => {
-  console.log("홈 props", props.screenProps);
   return <HomeStack screenProps={props.screenProps} />;
 };
 

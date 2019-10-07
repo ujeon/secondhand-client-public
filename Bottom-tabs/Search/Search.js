@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-  Text,
-  View,
-  Button,
-  ScrollView,
-  StyleSheet,
-  AsyncStorage
-} from "react-native";
+import { Text, View, Button, ScrollView, StyleSheet } from "react-native";
 import Slider from "react-native-slider";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -14,29 +7,32 @@ import ProductList from "../components/productList";
 
 export default class Search extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       sliderPrice: 1000,
       selectedBrand: null,
       selectedModel: null,
       brandModelList: [],
-      searchResult: null,
+      data: null,
       favoriteData: null
     };
   }
 
   async componentDidMount() {
-    console.log("search props", this.props.screenProps);
     let brandModel = await fetch("http://3.17.152.1:8000/api/list/")
       .then(res => res.json())
       .then(res => res);
+
     brandModel = brandModel.map((element, i) => {
       const temp = {};
       temp.id = i;
       temp.name = `${element.brand} - ${element.model}`;
       return temp;
     });
-    this.setState({ brandModelList: brandModel });
+
+    const favoriteData = this.props.screenProps.favoriteData;
+
+    this.setState({ brandModelList: brandModel, favoriteData });
   }
 
   selectedBrandModel = async () => {
@@ -53,14 +49,10 @@ export default class Search extends Component {
       .then(res => res)
       .catch(err => console.error(err));
 
-    const favoriteData = await AsyncStorage.getItem("favoriteData").then(res =>
-      JSON.parse(res)
-    );
-
     const result = {};
     searchData = searchData.map(el => {
-      for (let i = 0; i < favoriteData.length; i++) {
-        if (favoriteData[i].id === el.id) {
+      for (let i = 0; i < this.state.favoriteData.length; i++) {
+        if (this.state.favoriteData[i].id === el.id) {
           el.isFavorite = true;
           break;
         } else {
@@ -73,13 +65,24 @@ export default class Search extends Component {
     result.filtered_data = searchData;
 
     this.setState({
-      searchResult: result,
-      favoriteData
+      data: result
     });
   };
 
+  onLoad = () => {
+    this.props.navigation.addListener("willFocus", () => {
+      this.checkFavoriteStatus();
+      this.toggleFavorite();
+    });
+  };
+
+  checkFavoriteStatus = () => {
+    favoriteData = this.props.screenProps.favoriteData;
+    this.setState({ favoriteData });
+  };
+
   toggleFavorite = id => {
-    const clonedData = { ...this.state.searchResult };
+    const clonedData = { ...this.state.data };
     const clonedFavoriteData = this.state.favoriteData.slice();
     const favoriteIds = clonedFavoriteData.map(el => el.id);
     let target;
@@ -102,10 +105,10 @@ export default class Search extends Component {
       clonedFavoriteData.push(target);
     }
 
-    AsyncStorage.setItem("favoriteData", JSON.stringify(clonedFavoriteData));
+    this.props.screenProps.handleFavorite(clonedFavoriteData);
 
     this.setState({
-      searchResult: clonedData,
+      data: clonedData,
       favoriteData: clonedFavoriteData
     });
   };
@@ -176,9 +179,9 @@ export default class Search extends Component {
           onPress={() => this.selectedBrandModel()}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
-          {this.state.searchResult ? (
+          {this.state.data ? (
             <ProductList
-              data={this.state.searchResult}
+              data={this.state.data}
               toggleFavorite={this.toggleFavorite}
             />
           ) : (
