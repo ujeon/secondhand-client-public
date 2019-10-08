@@ -5,22 +5,55 @@ import {
   StyleSheet,
   Image,
   Text,
-  Dimensions
+  Dimensions,
+  ToastAndroid,
+  BackHandler
 } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
 import * as Crypto from "expo-crypto";
+import getAuth from "../fetchFns/fetchFns";
 
 const { width, height } = Dimensions.get("window");
 
 export default class SignIn extends React.Component {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
+      isValid: false,
       email: undefined,
       password: undefined,
       isSignIn: undefined,
       errMsg: ""
     };
+  }
+
+  componentWillMount() {
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+
+  async componentDidMount() {
+    const secure = await AsyncStorage.getItem("token");
+    const status = await getAuth(secure);
+    if (status === 200) {
+      this.setState({ isValid: true });
+    } else if (status === 403) {
+      this.setState({ isValid: false });
+    }
+    if (this.state.isValid) {
+      this.props.navigation.push("nav", {
+        popToTop: this.props.navigation.popToTop
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
   }
 
   requestUserSignIn = async () => {
@@ -55,16 +88,33 @@ export default class SignIn extends React.Component {
     const token = await AsyncStorage.getItem("token");
 
     if (this.state.isSignIn === true) {
-      const page = this.props.navigation.getParam("page", "mypageMain");
-
-      if (page) {
-        this.props.navigation.navigate("mypageMain", { token });
-      }
-      this.props.navigation.navigate("nav");
+      this.props.navigation.push("nav", {
+        popToTop: this.props.navigation.popToTop,
+        token
+      });
     } else {
       console.log("로그인에 실패했습니다");
     }
   };
+
+  handleBackButtonClick() {
+    if (this.exitApp === undefined || !this.exitApp) {
+      ToastAndroid.show("한번 더 누르시면 종료됩니다.", ToastAndroid.SHORT);
+      this.exitApp = true;
+
+      this.timeout = setTimeout(
+        () => {
+          this.exitApp = false;
+        },
+        2000 // 2초
+      );
+    } else {
+      clearTimeout(this.timeout);
+
+      BackHandler.exitApp(); // 앱 종료
+    }
+    return true;
+  }
 
   render() {
     return (

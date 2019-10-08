@@ -105,7 +105,8 @@ export default class Navigation extends Component {
       <BottomNav
         screenProps={{
           favoriteData: this.state.favoriteData,
-          handleFavorite: this.handleFavorite
+          handleFavorite: this.handleFavorite,
+          popToTop: this.props.navigation.getParam("popToTop")
         }}
       />
     );
