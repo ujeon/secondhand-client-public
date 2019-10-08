@@ -92,7 +92,7 @@ export default class SignIn extends React.Component {
             <Icon
               name="envelope"
               size={18}
-              color="#972DDE"
+              color="#9151BD"
               type="font-awesome"
               containerStyle={{
                 marginRight: 10
@@ -100,7 +100,7 @@ export default class SignIn extends React.Component {
             />
           }
           inputContainerStyle={{
-            borderBottomColor: "#972DDE"
+            borderBottomColor: "#9151BD"
           }}
         />
         <Input
@@ -117,7 +117,7 @@ export default class SignIn extends React.Component {
             <Icon
               name="lock"
               size={26}
-              color="#972DDE"
+              color="#9151BD"
               type="font-awesome"
               containerStyle={{
                 marginRight: 10
@@ -125,7 +125,7 @@ export default class SignIn extends React.Component {
             />
           }
           inputContainerStyle={{
-            borderBottomColor: "#972DDE"
+            borderBottomColor: "#9151BD"
           }}
         />
         <Button
@@ -134,7 +134,7 @@ export default class SignIn extends React.Component {
             this.handleSignInBtn();
           }}
           buttonStyle={{
-            backgroundColor: "#972DDE",
+            backgroundColor: "#9151BD",
             height: 50,
             marginTop: 20,
             marginBottom: 5
@@ -148,7 +148,7 @@ export default class SignIn extends React.Component {
             })
           }
           buttonStyle={{
-            backgroundColor: "#972DDE",
+            backgroundColor: "#9151BD",
             height: 50
           }}
         />
@@ -156,7 +156,7 @@ export default class SignIn extends React.Component {
           style={{
             alignSelf: "center",
             marginTop: height * 0.15,
-            color: "#972DDE"
+            color: "#9151BD"
           }}
         >
           copyright @ 2019
@@ -170,10 +170,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#F4E632",
+    backgroundColor: "#FEF68C",
     padding: 20,
     paddingBottom: height * 0.05,
-    borderWidth: 1,
-    borderColor: "red"
+    borderWidth: 1
   }
 });
