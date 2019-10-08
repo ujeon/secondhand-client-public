@@ -37,9 +37,10 @@ export default class Search extends Component {
       return temp;
     });
 
-    const favoriteData = this.props.screenProps.favoriteData;
+    const { favoriteData } = this.props.screenProps;
 
     this.setState({ brandModelList: brandModel, favoriteData });
+    this.onLoad();
   }
 
   selectedBrandModel = async () => {
@@ -79,13 +80,39 @@ export default class Search extends Component {
   onLoad = () => {
     this.props.navigation.addListener("willFocus", () => {
       this.checkFavoriteStatus();
-      this.toggleFavorite();
     });
   };
 
   checkFavoriteStatus = () => {
-    favoriteData = this.props.screenProps.favoriteData;
-    this.setState({ favoriteData });
+    if (this.state.data !== null) {
+      const newFavoriteData = this.props.screenProps.favoriteData.slice();
+      const newFavLength = newFavoriteData.length;
+
+      const result = {};
+      const stateData = { ...this.state.data };
+      data = stateData.filtered_data.map(el => {
+        if (newFavLength !== 0) {
+          for (let i = 0; i < newFavLength; i++) {
+            if (newFavoriteData[i].id === el.id) {
+              el.isFavorite = true;
+              break;
+            } else {
+              el.isFavorite = false;
+            }
+          }
+          return el;
+        }
+        el.isFavorite = false;
+        return el;
+      });
+
+      result.filtered_data = data;
+
+      this.setState({
+        data: result,
+        favoriteData: newFavoriteData
+      });
+    }
   };
 
   toggleFavorite = id => {
