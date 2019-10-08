@@ -155,7 +155,6 @@ class ProductList extends Component {
   };
 
   render() {
-    console.log("프로덕트 렌더링");
     let list;
     let averagePrice;
     if (this.state.data) {
