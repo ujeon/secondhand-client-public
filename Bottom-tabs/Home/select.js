@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { View, Picker, ScrollView, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Picker,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  Text
+} from "react-native";
+import Constants from "expo-constants";
 import { Button } from "react-native-elements";
 import Top5Quantity from "./top5Quantity";
 import Top5Price from "./top5Price";
@@ -57,8 +65,12 @@ export default class Select extends Component {
   render() {
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.statusBar} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>차트에 대한 제목</Text>
+        </View>
         <ScrollView
-          style={styles.container}
+          style={styles.chartContainer}
           pagingEnabled={true}
           horizontal={true}
           decelerationRate={0}
@@ -72,56 +84,114 @@ export default class Select extends Component {
           }}
           showsHorizontalScrollIndicator={false}
         >
-          <View style={styles.view}>
+          <View style={styles.chartCard}>
+            <View style={styles.chartTitleContainter}>
+              <Text style={styles.chartTitle}>TOP5 제품 가격</Text>
+            </View>
             <Top5Price />
           </View>
-          <View style={styles.view}>
+          <View style={styles.chartCard}>
+            <View style={styles.chartTitleContainter}>
+              <Text style={styles.chartTitle}>게시글 TOP5</Text>
+            </View>
             <Top5Quantity />
           </View>
         </ScrollView>
-
-        <View style={{ width, flex: 1, flexDirection: "row" }}>
-          <Picker
-            selectedValue={this.state.selectedBrand}
-            style={{ height: 50, width: 200 }}
-            onValueChange={itemValue => this.selectBrand(itemValue)}
-          >
-            {this.state.brand.map(brand => (
-              <Picker.Item label={brand} value={brand} key={brand} />
-            ))}
-          </Picker>
-          <Picker
-            selectedValue={this.state.selectedModel}
-            style={{ height: 50, width: 200 }}
-            onValueChange={itemValue =>
-              this.setState({ selectedModel: itemValue })
-            }
-          >
-            {this.state.model.map(model => (
-              <Picker.Item label={model} value={model} key={model} />
-            ))}
-          </Picker>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>브랜드와 모델을 검색해보세요</Text>
         </View>
-        <Button title="조건 선택" onPress={this.goResult} />
+        <View style={styles.pickerContainer}>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={this.state.selectedBrand}
+              onValueChange={itemValue => this.selectBrand(itemValue)}
+            >
+              {this.state.brand.map(brand => (
+                <Picker.Item label={brand} value={brand} key={brand} />
+              ))}
+            </Picker>
+          </View>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={this.state.selectedModel}
+              style={styles.picker}
+              onValueChange={itemValue =>
+                this.setState({ selectedModel: itemValue })
+              }
+            >
+              {this.state.model.map(model => (
+                <Picker.Item label={model} value={model} key={model} />
+              ))}
+            </Picker>
+          </View>
+        </View>
+        <View style={styles.btnContainer}>
+          <Button
+            title="선택 하기"
+            type="solid"
+            buttonStyle={styles.btnStyle}
+            onPress={this.goResult}
+          />
+        </View>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  statusBar: {
+    height: Constants.statusBarHeight
+  },
+  chartContainer: {
+    height: height * 0.6,
+    padding: "2%",
+    backgroundColor: "#9151bd"
+  },
+  chartCard: {
+    flex: 1,
+    alignItems: "stretch",
+    justifyContent: "space-between",
+    marginTop: "1.5%",
+    marginRight: 20,
+    width: width * 0.9,
+    height: height * 0.53,
+    borderRadius: 20,
+    elevation: 6,
+    backgroundColor: "#ffffff"
+  },
+
+  chartTitleContainter: {
+    marginTop: "5%"
+  },
+  chartTitle: {
+    marginLeft: "5%",
+    fontSize: 18
+  },
+
   titleContainer: {
-    paddingTop: "5%"
+    padding: "2%"
   },
   title: {
-    fontSize: 26
+    fontSize: 20
   },
-  view: {
-    marginTop: "1.5%",
+  btnContainer: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: "4%"
+  },
+  pickerContainer: {
     width,
-    marginRight: 5,
-    height: height * 0.55,
-    borderRadius: 10,
-    paddingHorizontal: 30
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around"
+  },
+  picker: {
+    height: 50,
+    width: 200
+  },
+  btnStyle: {
+    width: width * 0.5,
+    borderRadius: 20,
+    backgroundColor: "#9151bd"
   }
 });

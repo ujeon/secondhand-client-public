@@ -34,10 +34,20 @@ export default class AverageMonthly extends Component {
 
   render() {
     return this.state.averageByMonth.average_price ? (
-      <View>
+      <View style={styles.chartContainer}>
         <LineChart
           data={{
-            labels: this.state.averageByMonth.daily.map(el => el.date),
+            labels: this.state.averageByMonth.daily.map(el => {
+              let month = el.date.slice(5, 7);
+              if (month[0] === "0") {
+                month = month.slice(1);
+              }
+              let date = el.date.slice(8);
+              if (date[0] === "0") {
+                date = date.slice(1);
+              }
+              return `${month} / ${date}`;
+            }),
             datasets: [
               {
                 data: this.state.averageByMonth.daily.map(
@@ -47,12 +57,11 @@ export default class AverageMonthly extends Component {
             ]
           }}
           width={width * 2} // from react-native
-          height={height * 0.4}
+          height={height * 0.25}
           yAxisLabel=""
           chartConfig={{
-            backgroundColor: "#3c6382",
-            backgroundGradientFrom: "#0a3d62",
-            backgroundGradientTo: "#60a3bc",
+            backgroundGradientFrom: "#e5b2ca",
+            backgroundGradientTo: "#7028e4",
             decimalPlaces: 0, // optional, defaults to 2dp
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             style: {
@@ -61,57 +70,30 @@ export default class AverageMonthly extends Component {
           }}
           fromZero={true}
           bezier
-          style={{
-            marginVertical: 10,
-            borderRadius: 16
-          }}
+          style={styles.chart}
         />
         <View style={{ flex: 1, flexDirection: "row", width: width * 2 }}>
-          <Text
-            style={{
-              flex: 1,
-              backgroundColor: "#38ada9",
-              borderRadius: 15,
-              padding: 5,
-              marginEnd: 10,
-              color: "white",
-              textAlign: "center"
-            }}
-          >
-            {`최근 1달 내 평균 가격: ${String(
-              this.state.averageByMonth.average_price
-            ).slice(0, -3)},000 원`}
-          </Text>
-          <Text
-            style={{
-              flex: 1,
-              backgroundColor: "#1e3799",
-              borderRadius: 15,
-              padding: 5,
-              marginEnd: 10,
-              color: "white",
-              textAlign: "center"
-            }}
-          >
-            {`최근 1달 내 최저 가격: ${String(
-              this.state.averageByMonth.lowest_price
-            ).slice(0, -3)},000 원`}
-          </Text>
-          <Text
-            style={{
-              flex: 1,
-              backgroundColor: "#eb2f06",
-              borderRadius: 15,
-              padding: 5,
-              marginEnd: 10,
-              color: "white",
-              textAlign: "center"
-            }}
-          >
-            {`최근 1달 내 최고 가격: ${String(
-              this.state.averageByMonth.highest_price
-            ).slice(0, -3)},000 원`}
-          </Text>
+          <View style={styles.minPriceContainer}>
+            <Text style={styles.infoText}>
+              {`최근 1달 내 최저 가격: ${String(
+                this.state.averageByMonth.lowest_price
+              ).slice(0, -3)},000 원`}
+            </Text>
+          </View>
+          <View style={styles.avgPriceContainer}>
+            <Text style={styles.infoText}>
+              {`최근 1달 내 평균 가격: ${String(
+                this.state.averageByMonth.average_price
+              ).slice(0, -3)},000 원`}
+            </Text>
+          </View>
+          <View style={styles.maxPriceContainer}>
+            <Text style={styles.infoText}>
+              {`최근 1달 내 최고 가격: ${String(
+                this.state.averageByMonth.highest_price
+              ).slice(0, -3)},000 원`}
+            </Text>
+          </View>
         </View>
       </View>
     ) : (
@@ -121,7 +103,52 @@ export default class AverageMonthly extends Component {
 }
 
 const styles = StyleSheet.create({
-  text: {
-    borderRadius: 10
+  chartContainer: {
+    height: height * 0.4
+  },
+  chart: {
+    flex: 2,
+    marginVertical: 10,
+    borderRadius: 16
+  },
+  avgPriceContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#AB6DD7",
+    borderRadius: 20,
+    padding: 3,
+    marginEnd: 10,
+    color: "white",
+    textAlign: "center",
+    height: height * 0.05
+  },
+  maxPriceContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#7028e4",
+    borderRadius: 20,
+    padding: 3,
+    marginEnd: 10,
+    color: "white",
+    textAlign: "center",
+    height: height * 0.05
+  },
+  minPriceContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e5b2ca",
+    borderRadius: 20,
+    padding: 3,
+    marginEnd: 10,
+    color: "white",
+    textAlign: "center",
+    height: height * 0.05
+  },
+  infoText: {
+    fontSize: 15,
+    color: "#ffffff"
   }
 });

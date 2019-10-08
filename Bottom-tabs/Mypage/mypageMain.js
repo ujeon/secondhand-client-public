@@ -20,6 +20,7 @@ export default class MypageMain extends Component {
     await AsyncStorage.removeItem("token");
     const token = await AsyncStorage.getItem("token");
     this.setState({ token });
+    this.props.screenProps();
   };
 
   getUserInfo = async token => {

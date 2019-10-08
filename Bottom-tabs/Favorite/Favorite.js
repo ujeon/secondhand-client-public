@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, AsyncStorage, ScrollView } from "react-native";
+import { View, Text, AsyncStorage, ScrollView, StyleSheet } from "react-native";
+import Constants from "expo-constants";
 
 import ProductList from "../components/productList";
 
@@ -64,6 +65,7 @@ export default class Favorite extends React.Component {
     if (this.state.isSignIn === true) {
       return (
         <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.statusBar} />
           <ProductList
             data={this.state.favoriteData}
             toggleFavorite={this.toggleFavorite}
@@ -72,9 +74,21 @@ export default class Favorite extends React.Component {
       );
     }
     return (
-      <View>
-        <Text>회원가입을 하시면 즐겨찾기 추가가 가능합니다.</Text>
+      <View style={styles.mainContainer}>
+        <View style={styles.statusBar} />
+        <Text>회원가입을 하시면 즐겨찾기 추가가 가능합니다 :)</Text>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  statusBar: {
+    height: Constants.statusBarHeight
+  },
+  mainContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
