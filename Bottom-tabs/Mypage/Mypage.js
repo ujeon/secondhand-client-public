@@ -4,8 +4,6 @@ import React from "react";
 
 import Credit from "./credit";
 import MypageMain from "./mypageMain";
-import SignIn from "../../Main/signIn";
-import SignUp from "../../Main/signUp";
 
 const StackOfMypage = createStackNavigator(
   {
@@ -14,18 +12,6 @@ const StackOfMypage = createStackNavigator(
     },
     credit: {
       screen: Credit
-    },
-    signin: {
-      screen: SignIn,
-      navigationOptions: {
-        header: null
-      }
-    },
-    signup: {
-      screen: SignUp,
-      navigationOptions: {
-        header: null
-      }
     }
   },
   {
@@ -35,8 +21,8 @@ const StackOfMypage = createStackNavigator(
 
 const MypageStack = createAppContainer(StackOfMypage);
 
-const Mypage = () => {
-  return <MypageStack />;
+const Mypage = props => {
+  return <MypageStack screenProps={props.screenProps.popToTop} />;
 };
 
 export default Mypage;
