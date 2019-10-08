@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import { BarChart, YAxis } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
 
@@ -37,27 +37,21 @@ class Top5Quantity extends React.PureComponent {
       this.state.top5.map((v, index) => (
         <Text
           key={index}
-          x={x(this.state.top5[0].quantity) - 110}
+          x={x(this.state.top5[0].quantity) - 100}
           y={y(index) + bandwidth / 2}
           fontSize={16}
           fill="black"
           alignmentBaseline="middle"
         >
-          {`${v.quantity}개의 게시물`}
+          {`${v.quantity}개`}
         </Text>
       ));
 
     return this.state.top5[0] ? (
-      <View
-        style={{
-          flexDirection: "row",
-          height: height * 0.5,
-          width: width * 0.8,
-          paddingVertical: 16
-        }}
-      >
+      <View style={styles.chart}>
         <YAxis
           data={this.state.top5}
+          style={{ height: height * 0.4 }}
           yAccessor={({ index }) => index}
           contentInset={{ top: 25, bottom: 25 }}
           formatLabel={(value, index) => {
@@ -74,12 +68,12 @@ class Top5Quantity extends React.PureComponent {
           }}
         />
         <BarChart
-          style={{ flex: 1, marginLeft: 8 }}
+          style={{ flex: 1, marginLeft: 8, height: height * 0.4 }}
           data={this.state.top5}
           horizontal={true}
           yAccessor={({ item }) => item.quantity}
           contentInset={{ top: 10, bottom: 10 }}
-          spacingInner={0.7}
+          spacingInner={0.4}
           gridMin={0}
         >
           <Labels />
@@ -90,5 +84,16 @@ class Top5Quantity extends React.PureComponent {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  labelsContainer: {},
+  chart: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingVertical: 16,
+    marginBottom: "13%"
+  }
+});
 
 export default Top5Quantity;

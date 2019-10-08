@@ -7,7 +7,10 @@ import Result from "./result";
 const StackNav = createStackNavigator(
   {
     select: {
-      screen: Select
+      screen: Select,
+      navigationOptions: {
+        header: null
+      }
     },
     result: {
       screen: Result

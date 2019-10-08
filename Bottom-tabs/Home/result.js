@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import ProductList from "../components/productList";
 import AverageMonthly from "./averageMonthly";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 class Result extends Component {
   constructor(props) {
@@ -127,29 +127,32 @@ class Result extends Component {
     if (this.state.data) {
       return (
         // NOTE 종단 스크롤 뷰 안에 횡단 스크롤 뷰를 넣으면 가로, 세로 스크롤 모두 가능!
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <ScrollView
-            style={styles.container}
-            pagingEnabled={true}
-            horizontal={true}
-            decelerationRate={0}
-            snapToInterval={width - 60}
-            snapToAlignment="center"
-            contentInset={{
-              top: 0,
-              left: 30,
-              bottom: 0,
-              right: 30
-            }}
-            showsHorizontalScrollIndicator={false}
-          >
-            <AverageMonthly model={this.state.model} />
+        <View>
+          <View style={styles.chartContainer}>
+            <ScrollView
+              pagingEnabled={true}
+              horizontal={true}
+              decelerationRate={0}
+              snapToInterval={width - 60}
+              snapToAlignment="center"
+              contentInset={{
+                top: 0,
+                left: 30,
+                bottom: 0,
+                right: 30
+              }}
+              showsHorizontalScrollIndicator={false}
+            >
+              <AverageMonthly model={this.state.model} />
+            </ScrollView>
+          </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <ProductList
+              data={this.state.data}
+              toggleFavorite={this.toggleFavorite}
+            />
           </ScrollView>
-          <ProductList
-            data={this.state.data}
-            toggleFavorite={this.toggleFavorite}
-          />
-        </ScrollView>
+        </View>
       );
     }
     return (
@@ -163,7 +166,9 @@ class Result extends Component {
 export default Result;
 
 const styles = StyleSheet.create({
-  container: {},
+  chartContainer: {
+    height: height * 0.35
+  },
   titleContainer: {
     paddingTop: "5%"
   },
