@@ -5,12 +5,15 @@ import {
   Linking,
   StyleSheet,
   Picker,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions
 } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import env from "./env";
+
+const { width, height } = Dimensions.get("window");
 
 class ProductList extends Component {
   constructor(props) {
@@ -160,7 +163,7 @@ class ProductList extends Component {
       list = this.state.data.filtered_data;
     } else {
       return (
-        <View>
+        <View style={styles.loading}>
           <Text>결과를 가져오는 중입니다. 잠시만 기다려주세요.</Text>
         </View>
       );
@@ -186,6 +189,8 @@ class ProductList extends Component {
           />
           <Picker.Item label="거리순" value="거리순" key="거리순" />
         </Picker>
+        <View style={styles.itemList}>
+          
         {list.map(l => {
           // NOTE 데이터에 지역정보가 존재하면 해당 지역을 표시하고, 그렇지 않은 경우 대체 문구를 표시합니다.
           let location;
@@ -193,11 +198,11 @@ class ProductList extends Component {
             ? (location = "지역정보 없음")
             : (location = `${l.address} ${parseInt(l.distance)}km`);
 
-          // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘
-          let favoriteIcon;
-          l.isFavorite
-            ? (favoriteIcon = "favorite")
-            : (favoriteIcon = "favorite-border");
+            // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘
+            let favoriteIcon;
+            l.isFavorite
+              ? (favoriteIcon = "favorite")
+              : (favoriteIcon = "favorite-border");
 
           return (
             <ListItem
@@ -213,43 +218,52 @@ class ProductList extends Component {
                       <Text>{location}</Text>
                     </View>
                   </View>
-                  <View>
-                    <Text>{l.market}</Text>
-                  </View>
-                </View>
-              }
-              onPress={() => Linking.openURL(l.url)}
-              rightIcon={
-                <Icon
-                  name={favoriteIcon}
-                  type="material"
-                  color="#f9b0c3"
-                  size={40}
-                  onPress={async () => {
-                    const token = await AsyncStorage.getItem("token");
+                }
+                onPress={() => Linking.openURL(l.url)}
+                rightIcon={
+                  <Icon
+                    name={favoriteIcon}
+                    type="material"
+                    color="#f9b0c3"
+                    size={40}
+                    onPress={async () => {
+                      const token = await AsyncStorage.getItem("token");
 
-                    this.props.toggleFavorite(l.id);
+                      this.props.toggleFavorite(l.id);
 
-                    if (token) {
-                      fetch("http://3.17.152.1:8000/user/favorite/", {
-                        method: "POST",
-                        headers: { token },
-                        body: JSON.stringify({ list_id: l.id })
-                      });
-                    }
-                  }}
-                />
-              }
-              bottomDivider
-            />
-          );
-        })}
+                      if (token) {
+                        fetch("http://3.17.152.1:8000/user/favorite/", {
+                          method: "POST",
+                          headers: { token },
+                          body: JSON.stringify({ list_id: l.id })
+                        });
+                      }
+                    }}
+                  />
+                }
+                bottomDivider
+                containerStyle={styles.itemCard}
+              />
+            );
+          })}
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  itemList: {
+    flex: 1,
+    alignItems: "center"
+  },
+  itemCard: {
+    marginBottom: 10,
+    borderRadius: 20,
+    width: width * 0.95,
+    height: height * 0.14,
+    elevation: 6
+  },
   details: { flex: 1, flexDirection: "row", marginBottom: "5%" },
   location: {
     flex: 1,
@@ -260,6 +274,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     width: "50%"
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 
