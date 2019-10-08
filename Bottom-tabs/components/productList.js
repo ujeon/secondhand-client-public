@@ -190,13 +190,12 @@ class ProductList extends Component {
           <Picker.Item label="거리순" value="거리순" key="거리순" />
         </Picker>
         <View style={styles.itemList}>
-          
-        {list.map(l => {
-          // NOTE 데이터에 지역정보가 존재하면 해당 지역을 표시하고, 그렇지 않은 경우 대체 문구를 표시합니다.
-          let location;
-          l.location === "-"
-            ? (location = "지역정보 없음")
-            : (location = `${l.address} ${parseInt(l.distance)}km`);
+          {list.map(l => {
+            // NOTE 데이터에 지역정보가 존재하면 해당 지역을 표시하고, 그렇지 않은 경우 대체 문구를 표시합니다.
+            let location;
+            l.location === "-"
+              ? (location = "지역정보 없음")
+              : (location = `${l.address} ${parseInt(l.distance)}km`);
 
             // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘
             let favoriteIcon;
@@ -204,18 +203,22 @@ class ProductList extends Component {
               ? (favoriteIcon = "favorite")
               : (favoriteIcon = "favorite-border");
 
-          return (
-            <ListItem
-              key={l.id}
-              leftAvatar={{ source: { uri: l.img_url }, size: 70 }}
-              title={`${l.brand} / ${l.model}`}
-              subtitle={
-                <View>
-                  <Text>{`판매가: ${l.price}`}</Text>
-                  <View style={styles.details}>
-                    <Icon name="md-pin" type="ionicon" size={18} />
-                    <View style={styles.location}>
-                      <Text>{location}</Text>
+            return (
+              <ListItem
+                key={l.id}
+                leftAvatar={{ source: { uri: l.img_url }, size: 70 }}
+                title={`${l.brand} / ${l.model}`}
+                subtitle={
+                  <View>
+                    <Text>{`판매가: ${l.price}`}</Text>
+                    <View style={styles.details}>
+                      <Icon name="md-pin" type="ionicon" size={18} />
+                      <View style={styles.location}>
+                        <Text>{location}</Text>
+                      </View>
+                    </View>
+                    <View>
+                      <Text>{l.market}</Text>
                     </View>
                   </View>
                 }

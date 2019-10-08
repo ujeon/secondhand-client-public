@@ -93,22 +93,7 @@ export default class MypageMain extends Component {
         />
       </View>
     ) : (
-      <View>
-        <Text h4> 로그인 해 주세요 </Text>
-        <Button title="Credit" onPress={this.goCredit} />
-        <Button
-          title="로그인 하러가기"
-          onPress={() => {
-            this.props.navigation.navigate("signin", { page: "mypageMain" });
-          }}
-          buttonStyle={{
-            backgroundColor: "#972DDE",
-            height: 50,
-            marginTop: 20,
-            marginBottom: 5
-          }}
-        />
-      </View>
+      <View />
     );
   }
 }
