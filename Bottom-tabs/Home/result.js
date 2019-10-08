@@ -26,7 +26,7 @@ class Result extends Component {
       .then(res => res)
       .catch(err => console.error(err));
 
-    const favoriteData = this.props.screenProps.favoriteData;
+    const { favoriteData } = this.props.screenProps;
     const filteredData = data.filtered_data.map(el => {
       for (let i = 0; i < favoriteData.length; i++) {
         if (favoriteData[i].id === el.id) {
@@ -46,6 +46,50 @@ class Result extends Component {
       favoriteData
     });
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.isFocused !== this.props.isFocused) {
+      console.log("결과 페이지 컴온");
+    }
+  }
+
+  onLoad = () => {
+    this.props.navigation.addListener("willFocus", () => {
+      this.checkFavoriteStatus();
+    });
+  };
+
+  checkFavoriteStatus = () => {
+    if (this.state.data !== null) {
+      const newFavoriteData = this.props.screenProps.favoriteData.slice();
+      const newFavLength = newFavoriteData.length;
+
+      const result = {};
+      const stateData = { ...this.state.data };
+      data = stateData.filtered_data.map(el => {
+        if (newFavLength !== 0) {
+          for (let i = 0; i < newFavLength; i++) {
+            if (newFavoriteData[i].id === el.id) {
+              el.isFavorite = true;
+              break;
+            } else {
+              el.isFavorite = false;
+            }
+          }
+          return el;
+        }
+        el.isFavorite = false;
+        return el;
+      });
+
+      result.filtered_data = data;
+
+      this.setState({
+        data: result,
+        favoriteData: newFavoriteData
+      });
+    }
+  };
 
   toggleFavorite = id => {
     const clonedData = { ...this.state.data };

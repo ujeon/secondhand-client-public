@@ -14,15 +14,6 @@ export default class Favorite extends React.Component {
 
   async componentDidMount() {
     this.onLoad();
-    console.log(this.state.isSignIn);
-
-    // const favoriteData = this.props.screenProps.favoriteData;
-    // let temp = {};
-    // temp.filtered_data = favoriteData;
-
-    // this.setState({
-    //   favoriteData: temp
-    // });
   }
 
   onLoad = () => {
@@ -33,7 +24,7 @@ export default class Favorite extends React.Component {
   };
 
   checkFavoriteStatus = () => {
-    let temp = {};
+    const temp = {};
     temp.filtered_data = this.props.screenProps.favoriteData;
     this.setState({ favoriteData: temp });
   };
@@ -51,15 +42,17 @@ export default class Favorite extends React.Component {
   toggleFavorite = id => {
     const clonedFavoriteData = this.state.favoriteData.filtered_data.slice();
 
-    for (let i = 0; i < clonedFavoriteData.length; i++) {
-      if (clonedFavoriteData[i].id === id) {
-        clonedFavoriteData.splice(i, 1);
+    if (clonedFavoriteData.length !== 0) {
+      for (let i = 0; i < clonedFavoriteData.length; i++) {
+        if (clonedFavoriteData[i].id === id) {
+          clonedFavoriteData.splice(i, 1);
+        }
       }
     }
 
     this.props.screenProps.handleFavorite(clonedFavoriteData);
 
-    let temp = {};
+    const temp = {};
     temp.filtered_data = clonedFavoriteData;
 
     this.setState({
