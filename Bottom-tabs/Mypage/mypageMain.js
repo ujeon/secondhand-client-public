@@ -18,6 +18,7 @@ export default class MypageMain extends Component {
     await AsyncStorage.removeItem("token");
     const token = await AsyncStorage.getItem("token");
     this.setState({ token });
+    this.props.screenProps();
   };
 
   getUserInfo = () => {};
@@ -43,16 +44,7 @@ export default class MypageMain extends Component {
         <Button title="로그아웃" onPress={this.logOut} />
       </View>
     ) : (
-      <View>
-        <Text h4> 로그인 해 주세요 </Text>
-        <Button title="Credit" onPress={this.goCredit} />
-        <Button
-          title="로그인 하러가기"
-          onPress={() => {
-            this.props.navigation.navigate("signin", { page: "mypageMain" });
-          }}
-        />
-      </View>
+      <View />
     );
   }
 }

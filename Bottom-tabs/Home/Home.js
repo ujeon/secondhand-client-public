@@ -24,7 +24,20 @@ const StackNav = createStackNavigator(
 const HomeStack = createAppContainer(StackNav);
 
 const Home = props => {
-  return <HomeStack screenProps={props.screenProps} />;
+  onLoad = callback => {
+    props.navigation.addListener("willFocus", () => {
+      callback();
+    });
+  };
+  return (
+    <HomeStack
+      screenProps={{
+        fav: props.screenProps,
+        listener: this.onLoad,
+        remover: this.remover
+      }}
+    />
+  );
 };
 
 export default Home;

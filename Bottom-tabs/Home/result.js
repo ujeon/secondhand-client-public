@@ -16,6 +16,7 @@ class Result extends Component {
   }
 
   async componentDidMount() {
+    this.props.screenProps.listener(this.checkFavoriteStatus);
     const brand = this.props.navigation.getParam("brand");
     const model = this.props.navigation.getParam("model");
 
@@ -26,7 +27,7 @@ class Result extends Component {
       .then(res => res)
       .catch(err => console.error(err));
 
-    const { favoriteData } = this.props.screenProps;
+    const { favoriteData } = this.props.screenProps.fav;
     const filteredData = data.filtered_data.map(el => {
       for (let i = 0; i < favoriteData.length; i++) {
         if (favoriteData[i].id === el.id) {
@@ -47,21 +48,9 @@ class Result extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.isFocused !== this.props.isFocused) {
-      console.log("결과 페이지 컴온");
-    }
-  }
-
-  onLoad = () => {
-    this.props.navigation.addListener("willFocus", () => {
-      this.checkFavoriteStatus();
-    });
-  };
-
   checkFavoriteStatus = () => {
     if (this.state.data !== null) {
-      const newFavoriteData = this.props.screenProps.favoriteData.slice();
+      const newFavoriteData = this.props.screenProps.fav.favoriteData.slice();
       const newFavLength = newFavoriteData.length;
 
       const result = {};
@@ -115,7 +104,7 @@ class Result extends Component {
       clonedFavoriteData.push(target);
     }
 
-    this.props.screenProps.handleFavorite(clonedFavoriteData);
+    this.props.screenProps.fav.handleFavorite(clonedFavoriteData);
 
     this.setState({
       data: clonedData,

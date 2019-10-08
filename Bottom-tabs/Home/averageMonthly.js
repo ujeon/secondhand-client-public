@@ -37,7 +37,17 @@ export default class AverageMonthly extends Component {
       <View style={styles.chartContainer}>
         <LineChart
           data={{
-            labels: this.state.averageByMonth.daily.map(el => el.date),
+            labels: this.state.averageByMonth.daily.map(el => {
+              let month = el.date.slice(5, 7);
+              if (month[0] === "0") {
+                month = month.slice(1);
+              }
+              let date = el.date.slice(8);
+              if (date[0] === "0") {
+                date = date.slice(1);
+              }
+              return `${month} / ${date}`;
+            }),
             datasets: [
               {
                 data: this.state.averageByMonth.daily.map(
