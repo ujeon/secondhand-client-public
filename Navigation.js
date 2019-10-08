@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { BackHandler, ToastAndroid, AsyncStorage } from "react-native";
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import { Icon } from "react-native-elements";
+
 import Favorite from "./Bottom-tabs/Favorite/Favorite";
 import Home from "./Bottom-tabs/Home/Home";
 import Mypage from "./Bottom-tabs/Mypage/Mypage";
@@ -20,6 +22,41 @@ const BottomTab = createBottomTabNavigator(
     },
     mypage: {
       screen: Mypage
+    }
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        let iconSize;
+        if (routeName === "home") {
+          iconName = "home";
+          iconSize = 25;
+        } else if (routeName === "search") {
+          iconName = "search";
+          iconSize = 25;
+        } else if (routeName === "favorite") {
+          iconName = "favorite";
+          iconSize = 25;
+        } else if (routeName === "mypage") {
+          iconName = "person";
+          iconSize = 28;
+        }
+        // You can return any component that you like here!
+        return (
+          <Icon
+            name={iconName}
+            type="ioicon"
+            size={iconSize}
+            color={tintColor}
+          />
+        );
+      }
+    }),
+    tabBarOptions: {
+      activeTintColor: "#972DDE",
+      inactiveTintColor: "gray"
     }
   },
   { initialRouteName: "home" }
