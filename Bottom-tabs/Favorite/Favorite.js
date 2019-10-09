@@ -63,7 +63,10 @@ export default class Favorite extends React.Component {
 
   render() {
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.mainContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.statusBar} />
         <View style={styles.titleContainer}>
           <Text style={styles.tabTitle}>FAVORITE</Text>
@@ -82,13 +85,11 @@ export default class Favorite extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    padding: 20
+  },
   statusBar: {
     height: Constants.statusBarHeight
-  },
-  mainContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
   },
   titleContainer: {
     marginBottom: "2%"
