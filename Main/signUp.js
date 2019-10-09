@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Button } from "react-native";
-import { Input, Icon } from "react-native-elements";
+import { View, StyleSheet } from "react-native";
+import { Input, Button, Icon } from "react-native-elements";
 import * as Crypto from "expo-crypto";
 
 export default class SignUp extends React.Component {
@@ -58,7 +58,7 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View style={styles.container}>
         <Input
           onChangeText={email =>
             this.setState({
@@ -67,9 +67,21 @@ export default class SignUp extends React.Component {
           }
           placeholder="   E-mail"
           errorMessage={this.state.emailErrMsg}
+          placeholderTextColor="grey"
           leftIcon={
-            <Icon name="envelope" size={24} color="grey" type="font-awesome" />
+            <Icon
+              name="envelope"
+              size={18}
+              color="#9151BD"
+              type="font-awesome"
+              containerStyle={{
+                marginRight: 10
+              }}
+            />
           }
+          inputContainerStyle={{
+            borderBottomColor: "#9151BD"
+          }}
         />
         <Input
           onChangeText={nickname =>
@@ -78,10 +90,22 @@ export default class SignUp extends React.Component {
             })
           }
           placeholder="   nickname"
+          placeholderTextColor="grey"
           errorMessage={this.state.nickErrMsg}
           leftIcon={
-            <Icon name="user" size={24} color="grey" type="font-awesome" />
+            <Icon
+              name="user"
+              size={24}
+              color="#9151BD"
+              type="font-awesome"
+              containerStyle={{
+                marginRight: 10
+              }}
+            />
           }
+          inputContainerStyle={{
+            borderBottomColor: "#9151BD"
+          }}
         />
         <Input
           onChangeText={password =>
@@ -90,10 +114,22 @@ export default class SignUp extends React.Component {
             })
           }
           placeholder="   Password"
+          placeholderTextColor="grey"
           secureTextEntry={true}
           leftIcon={
-            <Icon name="lock" size={26} color="grey" type="font-awesome" />
+            <Icon
+              name="lock"
+              size={26}
+              color="#9151BD"
+              type="font-awesome"
+              containerStyle={{
+                marginRight: 10
+              }}
+            />
           }
+          inputContainerStyle={{
+            borderBottomColor: "#9151BD"
+          }}
         />
         <Button
           title="회원가입"
@@ -103,8 +139,33 @@ export default class SignUp extends React.Component {
               this.props.navigation.navigate("signin");
             }
           }}
+          buttonStyle={{
+            backgroundColor: "#9151BD",
+            height: 50,
+            marginTop: 20,
+            marginBottom: 5
+          }}
+        />
+        <Button
+          title="뒤로가기"
+          onPress={() => this.props.navigation.goBack()}
+          buttonStyle={{
+            backgroundColor: "#9151BD",
+            height: 50,
+            marginBottom: 5
+          }}
         />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#FEF68C",
+    padding: 20,
+    borderWidth: 1
+  }
+});
