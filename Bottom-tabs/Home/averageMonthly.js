@@ -13,11 +13,12 @@ export default class AverageMonthly extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.averageByMonth);
     this.setState({ averageByMonth: this.props.averageByMonth });
   }
 
   render() {
-    return this.state.averageByMonth.average_price ? (
+    return !Array.isArray(this.state.averageByMonth) ? (
       <View style={styles.chartContainer}>
         <LineChart
           data={{
@@ -93,12 +94,10 @@ export default class AverageMonthly extends Component {
 
 const styles = StyleSheet.create({
   chartContainer: {
-    height: height * 0.5
+    height: height * 0.42
   },
   chart: {
-    flex: 2,
-    marginVertical: 10,
-    height: height * 0.3
+    marginVertical: 10
   },
   avgPriceContainer: {
     flex: 1,
