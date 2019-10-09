@@ -173,7 +173,7 @@ class ProductList extends Component {
       <View>
         <Picker
           selectedValue={this.state.selectedValue}
-          style={{ height: 50, width: 200 }}
+          style={styles.picker}
           onValueChange={itemValue => this.sortResultData(itemValue)}
         >
           <Picker.Item label="최신순" value="최신순" key="최신순" />
@@ -213,9 +213,11 @@ class ProductList extends Component {
                   <View style={styles.details}>
                     <Text>{`판매가: ${l.price}`}</Text>
 
-                    <View style={styles.location}>
+                    <View style={styles.locationContainer}>
                       <Icon name="md-pin" type="ionicon" size={15} />
-                      <Text>{location}</Text>
+                      <View style={styles.location}>
+                        <Text>{location}</Text>
+                      </View>
                     </View>
 
                     <Text>{l.market}</Text>
@@ -256,6 +258,10 @@ class ProductList extends Component {
 }
 
 const styles = StyleSheet.create({
+  picker: {
+    width: width * 0.5,
+    marginLeft: "50%"
+  },
   itemList: {
     flex: 1,
     alignItems: "center"
@@ -264,17 +270,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 20,
     width: width * 0.95,
-    height: height * 0.17,
+    height: height * 0.155,
     elevation: 6
   },
   titleStyle: {
     marginTop: "6%",
     marginBottom: "2%"
   },
-  location: {
+  locationContainer: {
     flexDirection: "row",
-
-    marginLeft: "1%"
+    alignItems: "stretch"
+  },
+  location: {
+    width: width * 0.9
   },
   loading: {
     flex: 1,

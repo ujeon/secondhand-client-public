@@ -116,7 +116,18 @@ class Result extends Component {
     if (this.state.data) {
       return (
         // NOTE 종단 스크롤 뷰 안에 횡단 스크롤 뷰를 넣으면 가로, 세로 스크롤 모두 가능!
-        <View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          decelerationRate={0}
+          snapToInterval={width - 60}
+          snapToAlignment="center"
+          contentInset={{
+            top: 0,
+            left: 30,
+            bottom: 0,
+            right: 30
+          }}
+        >
           <View style={styles.chartContainer}>
             <ScrollView
               pagingEnabled={true}
@@ -135,13 +146,11 @@ class Result extends Component {
               <AverageMonthly model={this.state.model} />
             </ScrollView>
           </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <ProductList
-              data={this.state.data}
-              toggleFavorite={this.toggleFavorite}
-            />
-          </ScrollView>
-        </View>
+          <ProductList
+            data={this.state.data}
+            toggleFavorite={this.toggleFavorite}
+          />
+        </ScrollView>
       );
     }
     return (
@@ -156,7 +165,7 @@ export default Result;
 
 const styles = StyleSheet.create({
   chartContainer: {
-    height: height * 0.35
+    height: height * 0.4
   },
   titleContainer: {
     paddingTop: "5%"

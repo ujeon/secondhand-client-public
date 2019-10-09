@@ -18,7 +18,7 @@ class Top5Quantity extends React.PureComponent {
     fetch("http://3.17.152.1:8000/api/top5/")
       .then(res => res.json())
       .then(res => {
-        const color = ["#82ccdd", "#fad390", "#b8e994", "#6a89cc", "#f8c291"];
+        const color = ["#ef4351", "#3558a9", "#00adef", "#f8c015", "#000000"];
         for (const i in res) {
           res[i].svg = {
             fill: color[i]
@@ -51,7 +51,7 @@ class Top5Quantity extends React.PureComponent {
       <View style={styles.chart}>
         <YAxis
           data={this.state.top5}
-          style={{ height: height * 0.4 }}
+          style={styles.yaxis}
           yAccessor={({ index }) => index}
           contentInset={{ top: 25, bottom: 25 }}
           formatLabel={(value, index) => {
@@ -68,7 +68,7 @@ class Top5Quantity extends React.PureComponent {
           }}
         />
         <BarChart
-          style={{ flex: 1, marginLeft: 8, height: height * 0.4 }}
+          style={styles.barChart}
           data={this.state.top5}
           horizontal={true}
           yAccessor={({ item }) => item.quantity}
@@ -93,7 +93,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 16,
     marginBottom: "13%"
-  }
+  },
+  yaxis: {
+    height: height * 0.4,
+    marginTop: "3.5%",
+    marginLeft: "2.3%"
+  },
+  barChart: { flex: 1, marginLeft: 8, height: height * 0.4, margin: "2%" }
 });
 
 export default Top5Quantity;
