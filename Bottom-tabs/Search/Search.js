@@ -3,6 +3,7 @@ import { Text, View, ScrollView, StyleSheet, Dimensions } from "react-native";
 import { Button, Slider } from "react-native-elements";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import ProductList from "../components/productList";
+import Loading from "../components/loading";
 
 export default class Search extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ export default class Search extends Component {
       selectedModel: null,
       brandModelList: [],
       data: null,
-      favoriteData: null
+      favoriteData: null,
+      loading: "standby"
     };
   }
 
@@ -37,6 +39,9 @@ export default class Search extends Component {
 
   selectedBrandModel = async () => {
     if (this.state.selectedBrand && this.state.selectedModel) {
+      this.setState({
+        loading: "loading"
+      });
       let searchData = await fetch("http://3.17.152.1:8000/api/search/", {
         method: "POST",
         body: JSON.stringify({
@@ -66,7 +71,8 @@ export default class Search extends Component {
       result.filtered_data = searchData;
 
       this.setState({
-        data: result
+        data: result,
+        loading: "standby"
       });
     }
   };
@@ -144,7 +150,9 @@ export default class Search extends Component {
   render() {
     const { sliderPrice, brandModelList } = this.state;
 
-    return (
+    return this.state.loading === "loading" ? (
+      <Loading />
+    ) : (
       <View style={styles.container}>
         <Text style={styles.title}>SEARCH</Text>
         <Text style={{ fontSize: 15, fontWeight: "bold" }}>
@@ -224,7 +232,8 @@ export default class Search extends Component {
           onPress={() => this.selectedBrandModel()}
           buttonStyle={{
             backgroundColor: "#9151BD",
-            height: 50
+            height: 50,
+            borderRadius: 10
           }}
           containerStyle={{ marginTop: 10 }}
         />
