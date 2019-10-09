@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { View, AsyncStorage, StyleSheet } from "react-native";
+import { View, AsyncStorage, StyleSheet, Dimensions } from "react-native";
 import { Text, Button, Card } from "react-native-elements";
-import Constants from "expo-constants";
+
+const { width, height } = Dimensions.get("window");
 
 export default class MypageMain extends Component {
   constructor(props) {
@@ -38,7 +39,10 @@ export default class MypageMain extends Component {
   componentDidMount = async () => {
     const token = await AsyncStorage.getItem("token");
     const userData = await this.getUserInfo(token);
-    console.log("유저정보", userData);
+    const signupDate = userData.signup_date.split("-");
+    userData.signup_date = `${signupDate[0]}년 ${signupDate[1]}월 ${
+      signupDate[2]
+    }일`;
     this.setState({ token, userData });
   };
 
@@ -52,31 +56,40 @@ export default class MypageMain extends Component {
 
   render() {
     return this.state.token ? (
-      <View style={styles.statusBar}>
+      <View style={styles.maincontainer}>
+        <Text style={styles.title}>MY PAGE</Text>
         <View>
           <Card
             containerStyle={{
-              padding: 50,
-              flex: 1,
-              margin: 5,
-              justifyContent: "space-around",
-              marginTop: 20,
-              borderStyle: "solid",
+              paddingLeft: 30,
+              paddingRight: 30,
+              marginTop: "3%",
+              marginBottom: "3%",
+              justifyContent: "center",
               borderWidth: 1,
-              borderRadius: 0.5,
-              borderColor: "#972DDE"
+              borderColor: "#9151BD",
+              borderRadius: 10,
+              position: "relative",
+              elevation: 6
             }}
           >
-            <Text style={styles.cardTitle}>{this.state.userData.email}</Text>
+            <Text style={styles.cardTitleFirst}>이메일</Text>
+            <Text style={styles.cardText}>{this.state.userData.email}</Text>
+            <Text style={styles.cardTitle}>사용자이름</Text>
             <Text style={styles.cardText}>{this.state.userData.nickname}</Text>
+            <Text style={styles.cardTitle}>가입일</Text>
+            <Text style={styles.cardText}>
+              {this.state.userData.signup_date}
+            </Text>
           </Card>
         </View>
         <Button
           title="Credit"
           onPress={this.goCredit}
           buttonStyle={{
-            backgroundColor: "#972DDE",
+            backgroundColor: "#9151BD",
             height: 50,
+            borderRadius: 10,
             marginTop: 20,
             marginBottom: 5
           }}
@@ -85,10 +98,9 @@ export default class MypageMain extends Component {
           title="로그아웃"
           onPress={this.logOut}
           buttonStyle={{
-            backgroundColor: "#972DDE",
+            backgroundColor: "#9151BD",
             height: 50,
-            marginTop: 20,
-            marginBottom: 5
+            borderRadius: 10
           }}
         />
       </View>
@@ -99,34 +111,43 @@ export default class MypageMain extends Component {
 }
 
 const styles = StyleSheet.create({
-  statusBar: {
-    height: Constants.statusBarHeight
-  },
-  text: {
-    margin: 20,
+  maincontainer: {
     justifyContent: "center",
-    textAlign: "center",
-    color: "#972DDE",
-    fontSize: 20,
-    fontWeight: "200"
+    padding: 20
   },
-  container: {
-    padding: 0,
-    flex: 1,
-    margin: 20,
+  title: {
+    marginTop: "8%",
+    marginBottom: "5%",
     justifyContent: "center",
-    marginTop: 80,
-    borderStyle: "solid",
-    borderColor: "#972DDE"
+    textAlign: "left",
+    color: "#a773ca",
+    fontSize: 40
+  },
+  cardTitleFirst: {
+    fontSize: 15,
+    color: "#676666",
+    position: "relative",
+    padding: "1%",
+    marginTop: "5%",
+    letterSpacing: 1,
+    textAlign: "center"
   },
   cardTitle: {
-    fontSize: 20,
-    color: "#6a89cc",
-    position: "relative"
+    fontSize: 15,
+    color: "#676666",
+    position: "relative",
+    padding: "1%",
+    marginBottom: "1%",
+    letterSpacing: 1,
+    textAlign: "center"
   },
   cardText: {
-    fontSize: 15,
-    color: "#6a89cc",
-    position: "relative"
+    fontSize: 18,
+    color: "#676666",
+    position: "relative",
+    padding: "1%",
+    marginBottom: "5%",
+    letterSpacing: 1,
+    textAlign: "center"
   }
 });

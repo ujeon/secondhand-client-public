@@ -8,10 +8,16 @@ import MypageMain from "./mypageMain";
 const StackOfMypage = createStackNavigator(
   {
     mypageMain: {
-      screen: MypageMain
+      screen: MypageMain,
+      navigationOptions: {
+        header: null
+      }
     },
     credit: {
-      screen: Credit
+      screen: Credit,
+      navigationOptions: {
+        header: null
+      }
     }
   },
   {

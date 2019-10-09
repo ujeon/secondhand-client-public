@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
-import { Card, Icon } from "react-native-elements";
+import { View, Text, StyleSheet } from "react-native";
+import { Card } from "react-native-elements";
 
 const credit = users => {
   users = [
@@ -23,20 +23,22 @@ const credit = users => {
   ];
 
   return (
-    <View>
-      <Text style={styles.text}>만든 해파리들</Text>
+    <View style={styles.maincontainer}>
+      <Text style={styles.title}>CREDIT</Text>
       {users.map((user, index) => (
         <View key={index}>
           <Card
             containerStyle={{
               padding: 50,
               flex: 1,
-              margin: 5,
+              marginBottom: "1%",
               justifyContent: "center",
-              marginTop: 20,
-              borderStyle: "solid",
               borderWidth: 1,
-              borderColor: "#972DDE"
+              borderColor: "#FEF68C",
+              borderRadius: 10,
+              position: "relative",
+              backgroundColor: "#FEF68C",
+              elevation: 6
             }}
           >
             <Text style={styles.cardTitle}>{user.name}</Text>
@@ -51,17 +53,30 @@ const credit = users => {
 export default credit;
 
 const styles = StyleSheet.create({
-  text: {
-    margin: 20,
+  maincontainer: {
     justifyContent: "center",
-    textAlign: "center",
-    color: "#972DDE",
-    fontSize: 20,
-    fontWeight: "200"
+    padding: 20
   },
-  cardText: {
+  title: {
+    margin: "8%",
+    marginBottom: "5%",
+    justifyContent: "center",
+    textAlign: "left",
+    color: "#a773ca",
+    fontSize: 40
+  },
+  cardTitle: {
     fontSize: 20,
-    color: "#6a89cc",
-    position: "relative"
+    color: "#676666",
+    position: "relative",
+    padding: "1%",
+    marginBottom: "1%"
+  },
+  cardContent: {
+    fontSize: 20,
+    color: "#676666",
+    position: "relative",
+    padding: "1%",
+    marginBottom: "1%"
   }
 });

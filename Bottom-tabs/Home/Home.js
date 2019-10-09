@@ -13,7 +13,10 @@ const StackNav = createStackNavigator(
       }
     },
     result: {
-      screen: Result
+      screen: Result,
+      navigationOptions: {
+        header: null
+      }
     }
   },
   {
