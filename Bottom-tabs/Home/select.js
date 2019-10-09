@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   chartContainer: {
     height: height * 0.6,
     padding: "2%",
-    backgroundColor: "#9151bd"
+    backgroundColor: "#bd96d7"
   },
   chartCard: {
     flex: 1,

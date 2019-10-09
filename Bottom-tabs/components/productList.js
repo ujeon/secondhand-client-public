@@ -206,20 +206,19 @@ class ProductList extends Component {
             return (
               <ListItem
                 key={l.id}
-                leftAvatar={{ source: { uri: l.img_url }, size: 70 }}
+                leftAvatar={{ source: { uri: l.img_url }, size: 85 }}
                 title={`${l.brand} / ${l.model}`}
+                titleStyle={styles.titleStyle}
                 subtitle={
-                  <View>
+                  <View style={styles.details}>
                     <Text>{`판매가: ${l.price}`}</Text>
-                    <View style={styles.details}>
-                      <Icon name="md-pin" type="ionicon" size={18} />
-                      <View style={styles.location}>
-                        <Text>{location}</Text>
-                      </View>
+
+                    <View style={styles.location}>
+                      <Icon name="md-pin" type="ionicon" size={15} />
+                      <Text>{location}</Text>
                     </View>
-                    <View>
-                      <Text>{l.market}</Text>
-                    </View>
+
+                    <Text>{l.market}</Text>
                   </View>
                 }
                 onPress={() => Linking.openURL(l.url)}
@@ -227,7 +226,7 @@ class ProductList extends Component {
                   <Icon
                     name={favoriteIcon}
                     type="material"
-                    color="#f9b0c3"
+                    color="#FE8C8C"
                     size={40}
                     onPress={async () => {
                       const token = await AsyncStorage.getItem("token");
@@ -246,6 +245,7 @@ class ProductList extends Component {
                 }
                 bottomDivider
                 containerStyle={styles.itemCard}
+                underlayColor="#ffffff"
               />
             );
           })}
@@ -264,19 +264,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 20,
     width: width * 0.95,
-    height: height * 0.14,
+    height: height * 0.17,
     elevation: 6
   },
-  details: { flex: 1, flexDirection: "row", marginBottom: "5%" },
-  location: {
-    flex: 1,
-    justifyContent: "space-between",
-    marginLeft: "1%"
+  titleStyle: {
+    marginTop: "6%",
+    marginBottom: "2%"
   },
-  market: {
-    flex: 1,
-    justifyContent: "space-between",
-    width: "50%"
+  location: {
+    flexDirection: "row",
+
+    marginLeft: "1%"
   },
   loading: {
     flex: 1,
