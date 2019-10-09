@@ -13,23 +13,7 @@ export default class AverageMonthly extends Component {
   }
 
   componentDidMount() {
-    if (this.props.model !== "etc") {
-      fetch("http://3.17.152.1:8000/api/average/monthly/", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ model: this.props.model })
-      })
-        .then(res => res.json())
-        .then(res => {
-          this.setState({
-            averageByMonth: res
-          });
-        })
-        .catch(err => console.error(err));
-    }
+    this.setState({ averageByMonth: this.props.averageByMonth });
   }
 
   render() {
