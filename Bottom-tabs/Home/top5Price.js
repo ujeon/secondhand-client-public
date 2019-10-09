@@ -6,7 +6,7 @@ import { View, Dimensions, StyleSheet } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 class Top5Price extends React.PureComponent {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
       top5: [],
@@ -15,23 +15,27 @@ class Top5Price extends React.PureComponent {
   }
 
   componentDidMount() {
-    fetch("http://3.17.152.1:8000/api/top5/")
-      .then(res => res.json())
-      .then(res => {
-        const color = ["#82ccdd", "#fad390", "#b8e994", "#6a89cc", "#f8c291"];
-        this.setState({
-          originData: res.map(el => ({ ...el }))
-        });
-        for (const i in res) {
-          res[i].svg = {
-            fill: color[i]
-          };
-        }
-        this.setState({
-          top5: res
-        });
-      })
-      .catch(err => console.error(err));
+    // fetch("http://3.17.152.1:8000/api/top5/")
+    //   .then(res => res.json())
+    //   .then(res => {
+    //     const color = ["#82ccdd", "#fad390", "#b8e994", "#6a89cc", "#f8c291"];
+    //     this.setState({
+    //       originData: res.map(el => ({ ...el }))
+    //     });
+    //     for (const i in res) {
+    //       res[i].svg = {
+    //         fill: color[i]
+    //       };
+    //     }
+    //     this.setState({
+    //       top5: res
+    //     });
+    //   })
+    //   .catch(err => console.error(err));
+    this.setState({
+      top5: this.props.top5,
+      originData: this.props.originData
+    });
   }
 
   render() {

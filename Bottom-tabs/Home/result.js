@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import ProductList from "../components/productList";
 import AverageMonthly from "./averageMonthly";
+import Loading from "../components/loading";
 
 const { width, height } = Dimensions.get("window");
 
@@ -11,7 +12,9 @@ class Result extends Component {
     this.state = {
       data: null,
       model: this.props.navigation.getParam("model"),
-      favoriteData: null
+      favoriteData: null,
+      averageByMonth: [],
+      loadComplete: false
     };
   }
 
@@ -46,6 +49,25 @@ class Result extends Component {
       data,
       favoriteData
     });
+
+    if (this.state.model !== "etc") {
+      await fetch("http://3.17.152.1:8000/api/average/monthly/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ model: this.state.model })
+      })
+        .then(res => res.json())
+        .then(res =>
+          this.setState({
+            averageByMonth: res
+          })
+        )
+        .catch(err => console.error(err));
+    }
+    this.setState({ loadComplete: true });
   }
 
   checkFavoriteStatus = () => {
@@ -113,7 +135,7 @@ class Result extends Component {
   };
 
   render() {
-    if (this.state.data) {
+    if (this.state.loadComplete) {
       return (
         // NOTE 종단 스크롤 뷰 안에 횡단 스크롤 뷰를 넣으면 가로, 세로 스크롤 모두 가능!
         <ScrollView
@@ -143,7 +165,10 @@ class Result extends Component {
               }}
               showsHorizontalScrollIndicator={false}
             >
-              <AverageMonthly model={this.state.model} />
+              <AverageMonthly
+                model={this.state.model}
+                averageByMonth={this.state.averageByMonth}
+              />
             </ScrollView>
           </View>
           <ProductList
@@ -153,11 +178,7 @@ class Result extends Component {
         </ScrollView>
       );
     }
-    return (
-      <View>
-        <Text>로딩중</Text>
-      </View>
-    );
+    return <Loading />;
   }
 }
 
