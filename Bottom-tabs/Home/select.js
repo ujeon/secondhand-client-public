@@ -91,7 +91,7 @@ export default class Select extends Component {
   };
 
   render() {
-    return (
+    return this.state.top5[0] ? (
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.mainContainer}
