@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import Constants from "expo-constants";
 import ProductList from "../components/productList";
 import AverageMonthly from "./averageMonthly";
 import Loading from "../components/loading";
@@ -150,6 +151,7 @@ class Result extends Component {
             right: 30
           }}
         >
+          <View style={styles.statusBar} />
           {this.state.model !== "etc" ? (
             <ScrollView
               pagingEnabled={true}
@@ -189,6 +191,9 @@ class Result extends Component {
 export default Result;
 
 const styles = StyleSheet.create({
+  statusBar: {
+    height: Constants.statusBarHeight
+  },
   chartContainer: {
     flex: 1,
     height: height * 0.2,

@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
 import * as Crypto from "expo-crypto";
-import getAuth from "../fetchFns/fetchFns";
 import { emitNotification } from "expo/build/Notifications/Notifications";
+import getAuth from "../fetchFns/fetchFns";
 
 const { width, height } = Dimensions.get("window");
 
@@ -153,7 +153,7 @@ export default class SignIn extends React.Component {
             })
           }
           placeholder="  E-mail"
-          placeholderTextColor="#ffcccc"
+          placeholderTextColor="grey"
           leftIcon={
             <Icon
               name="envelope"
@@ -176,7 +176,7 @@ export default class SignIn extends React.Component {
             })
           }
           placeholder="  Password"
-          placeholderTextColor="#ffcccc"
+          placeholderTextColor="grey"
           errorMessage={this.state.errMsg}
           secureTextEntry={true}
           leftIcon={
@@ -203,7 +203,8 @@ export default class SignIn extends React.Component {
             backgroundColor: "#9151BD",
             height: 50,
             marginTop: 20,
-            marginBottom: 5
+            marginBottom: 5,
+            borderRadius: 10
           }}
         />
         <Button
@@ -215,7 +216,8 @@ export default class SignIn extends React.Component {
           }
           buttonStyle={{
             backgroundColor: "#9151BD",
-            height: 50
+            height: 50,
+            borderRadius: 10
           }}
         />
         <Text

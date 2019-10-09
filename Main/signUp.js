@@ -204,7 +204,8 @@ export default class SignUp extends React.Component {
             backgroundColor: "#9151BD",
             height: 50,
             marginTop: 20,
-            marginBottom: 5
+            marginBottom: 5,
+            borderRadius: 10
           }}
         />
         <Button
@@ -213,7 +214,8 @@ export default class SignUp extends React.Component {
           buttonStyle={{
             backgroundColor: "#9151BD",
             height: 50,
-            marginBottom: 5
+            marginBottom: 5,
+            borderRadius: 10
           }}
         />
       </View>
