@@ -275,7 +275,8 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     marginTop: "6%",
-    marginBottom: "2%"
+    marginBottom: "2%",
+    width: width * 0.9
   },
   locationContainer: {
     flexDirection: "row",
