@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Card } from "react-native-elements";
+import Constants from "expo-constants";
 
 const credit = users => {
   users = [
@@ -24,6 +25,7 @@ const credit = users => {
 
   return (
     <View style={styles.maincontainer}>
+      <View style={styles.statusBar} />
       <Text style={styles.title}>CREDIT</Text>
       {users.map((user, index) => (
         <View key={index}>
@@ -54,14 +56,12 @@ export default credit;
 
 const styles = StyleSheet.create({
   maincontainer: {
-    justifyContent: "center",
     padding: 20
   },
+  statusBar: {
+    height: Constants.statusBarHeight
+  },
   title: {
-    margin: "8%",
-    marginBottom: "5%",
-    justifyContent: "center",
-    textAlign: "left",
     color: "#a773ca",
     fontSize: 40
   },

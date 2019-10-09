@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text, View, ScrollView, StyleSheet, Dimensions } from "react-native";
 import { Button, Slider } from "react-native-elements";
 import SearchableDropdown from "react-native-searchable-dropdown";
+import Constants from "expo-constants";
 import ProductList from "../components/productList";
 import Loading from "../components/loading";
 
@@ -153,90 +154,93 @@ export default class Search extends Component {
     return this.state.loading === "loading" ? (
       <Loading />
     ) : (
-      <View style={styles.container}>
-        <Text style={styles.title}>SEARCH</Text>
-        <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-          원하는 가격범위를 설정해 주세요
-        </Text>
-        <Slider
-          style={{
-            width: Dimensions.get("screen").width * 0.9,
-            margin: 5,
-            alignSelf: "center",
-            padding: 5
-          }}
-          minimumValue={20000}
-          maximumValue={1000000}
-          step={10000}
-          value={sliderPrice}
-          trackStyle={{ height: 10, borderRadius: 10 }}
-          thumbStyle={{ height: 20, width: 20, borderRadius: 20 }}
-          onValueChange={select => {
-            this.setState({
-              sliderPrice: select
-            });
-          }}
-          minimumTrackTintColor="#A7A7A7"
-          maximumTrackTintColor="#D5D5D5"
-          thumbTintColor="#9151BD"
-        />
-        <Text
-          style={{
-            fontSize: 15,
-            fontWeight: "700",
-            alignSelf: "center"
-          }}
-        >
-          {sliderPrice}원 미만 상품
-        </Text>
-        <SearchableDropdown
-          multi={false}
-          onItemSelect={item => {
-            const separateBrandModel = item.name.split(" - ");
-            const brand = separateBrandModel[0];
-            const model = separateBrandModel[1];
-            this.setState({
-              selectedBrand: brand,
-              selectedModel: model
-            });
-          }}
-          containerStyle={{ padding: 5, marginTop: 15 }}
-          itemStyle={{
-            padding: 10,
-            marginTop: 5,
-            backgroundColor: "#fff",
-            borderColor: "#bd96d7",
-            borderWidth: 1,
-            borderRadius: 10
-          }}
-          itemTextStyle={{ color: "#000" }}
-          itemsContainerStyle={{ maxHeight: 300 }}
-          items={brandModelList}
-          resetValue={false}
-          textInputProps={{
-            placeholder: "찾으시는 브랜드 또는 모델을 입력해주세요",
-            underlineColorAndroid: "transparent",
-            style: {
-              padding: 12,
-              borderWidth: 1.5,
-              borderColor: "#a773ca",
+      <View>
+        <View style={styles.container}>
+          <View style={styles.statusBar} />
+          <Text style={styles.title}>SEARCH</Text>
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+            원하는 가격범위를 설정해 주세요
+          </Text>
+          <Slider
+            style={{
+              width: Dimensions.get("screen").width * 0.9,
+              margin: 5,
+              alignSelf: "center",
+              padding: 5
+            }}
+            minimumValue={20000}
+            maximumValue={1000000}
+            step={10000}
+            value={sliderPrice}
+            trackStyle={{ height: 10, borderRadius: 10 }}
+            thumbStyle={{ height: 20, width: 20, borderRadius: 20 }}
+            onValueChange={select => {
+              this.setState({
+                sliderPrice: select
+              });
+            }}
+            minimumTrackTintColor="#A7A7A7"
+            maximumTrackTintColor="#D5D5D5"
+            thumbTintColor="#9151BD"
+          />
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "700",
+              alignSelf: "center"
+            }}
+          >
+            {sliderPrice}원 미만 상품
+          </Text>
+          <SearchableDropdown
+            multi={false}
+            onItemSelect={item => {
+              const separateBrandModel = item.name.split(" - ");
+              const brand = separateBrandModel[0];
+              const model = separateBrandModel[1];
+              this.setState({
+                selectedBrand: brand,
+                selectedModel: model
+              });
+            }}
+            containerStyle={{ padding: 5, marginTop: 15 }}
+            itemStyle={{
+              padding: 10,
+              marginTop: 5,
+              backgroundColor: "#fff",
+              borderColor: "#bd96d7",
+              borderWidth: 1,
               borderRadius: 10
-            }
-          }}
-          listProps={{
-            nestedScrollEnabled: true
-          }}
-        />
-        <Button
-          title="검   색"
-          onPress={() => this.selectedBrandModel()}
-          buttonStyle={{
-            backgroundColor: "#9151BD",
-            height: 50,
-            borderRadius: 10
-          }}
-          containerStyle={{ marginTop: 10 }}
-        />
+            }}
+            itemTextStyle={{ color: "#000" }}
+            itemsContainerStyle={{ maxHeight: 300 }}
+            items={brandModelList}
+            resetValue={false}
+            textInputProps={{
+              placeholder: "찾으시는 브랜드 또는 모델을 입력해주세요",
+              underlineColorAndroid: "transparent",
+              style: {
+                padding: 12,
+                borderWidth: 1.5,
+                borderColor: "#a773ca",
+                borderRadius: 10
+              }
+            }}
+            listProps={{
+              nestedScrollEnabled: true
+            }}
+          />
+          <Button
+            title="검   색"
+            onPress={() => this.selectedBrandModel()}
+            buttonStyle={{
+              backgroundColor: "#9151BD",
+              height: 50,
+              borderRadius: 10
+            }}
+            containerStyle={{ marginTop: 10 }}
+          />
+        </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           {this.state.data ? (
             <ProductList
@@ -254,9 +258,10 @@ export default class Search extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 30
+    padding: 20
+  },
+  statusBar: {
+    height: Constants.statusBarHeight
   },
   title: {
     fontSize: 40,

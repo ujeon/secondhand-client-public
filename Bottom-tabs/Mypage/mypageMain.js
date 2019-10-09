@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import { View, AsyncStorage, StyleSheet, Dimensions } from "react-native";
+import { View, AsyncStorage, StyleSheet } from "react-native";
 import { Text, Button, Card } from "react-native-elements";
-
-const { width, height } = Dimensions.get("window");
+import Constants from "expo-constants";
+import Loading from "../components/loading";
 
 export default class MypageMain extends Component {
   constructor(props) {
     super(props);
     this.state = {
       token: null,
-      userData: null
+      userData: null,
+      loading: false
     };
   }
 
@@ -37,13 +38,14 @@ export default class MypageMain extends Component {
   };
 
   componentDidMount = async () => {
+    this.setState({ loading: true });
     const token = await AsyncStorage.getItem("token");
     const userData = await this.getUserInfo(token);
     const signupDate = userData.signup_date.split("-");
     userData.signup_date = `${signupDate[0]}년 ${signupDate[1]}월 ${
       signupDate[2]
     }일`;
-    this.setState({ token, userData });
+    this.setState({ token, userData, loading: false });
   };
 
   componentDidUpdate(prevProps) {
@@ -55,71 +57,76 @@ export default class MypageMain extends Component {
   }
 
   render() {
-    return this.state.token ? (
-      <View style={styles.maincontainer}>
-        <Text style={styles.title}>MY PAGE</Text>
-        <View>
-          <Card
-            containerStyle={{
-              paddingLeft: 30,
-              paddingRight: 30,
-              marginTop: "3%",
-              marginBottom: "3%",
-              justifyContent: "center",
-              borderWidth: 1,
-              borderColor: "#9151BD",
+    return !this.state.loading ? (
+      this.state.token ? (
+        <View style={styles.maincontainer}>
+          <View style={styles.statusBar} />
+          <Text style={styles.title}>MY PAGE</Text>
+          <View>
+            <Card
+              containerStyle={{
+                paddingLeft: 30,
+                paddingRight: 30,
+                marginTop: "3%",
+                marginBottom: "3%",
+                justifyContent: "center",
+                borderWidth: 1,
+                borderColor: "#9151BD",
+                borderRadius: 10,
+                position: "relative",
+                elevation: 6
+              }}
+            >
+              <Text style={styles.cardTitleFirst}>이메일</Text>
+              <Text style={styles.cardText}>{this.state.userData.email}</Text>
+              <Text style={styles.cardTitle}>사용자이름</Text>
+              <Text style={styles.cardText}>
+                {this.state.userData.nickname}
+              </Text>
+              <Text style={styles.cardTitle}>가입일</Text>
+              <Text style={styles.cardText}>
+                {this.state.userData.signup_date}
+              </Text>
+            </Card>
+          </View>
+          <Button
+            title="Credit"
+            onPress={this.goCredit}
+            buttonStyle={{
+              backgroundColor: "#9151BD",
+              height: 50,
               borderRadius: 10,
-              position: "relative",
-              elevation: 6
+              marginTop: 20,
+              marginBottom: 5
             }}
-          >
-            <Text style={styles.cardTitleFirst}>이메일</Text>
-            <Text style={styles.cardText}>{this.state.userData.email}</Text>
-            <Text style={styles.cardTitle}>사용자이름</Text>
-            <Text style={styles.cardText}>{this.state.userData.nickname}</Text>
-            <Text style={styles.cardTitle}>가입일</Text>
-            <Text style={styles.cardText}>
-              {this.state.userData.signup_date}
-            </Text>
-          </Card>
+          />
+          <Button
+            title="로그아웃"
+            onPress={this.logOut}
+            buttonStyle={{
+              backgroundColor: "#9151BD",
+              height: 50,
+              borderRadius: 10
+            }}
+          />
         </View>
-        <Button
-          title="Credit"
-          onPress={this.goCredit}
-          buttonStyle={{
-            backgroundColor: "#9151BD",
-            height: 50,
-            borderRadius: 10,
-            marginTop: 20,
-            marginBottom: 5
-          }}
-        />
-        <Button
-          title="로그아웃"
-          onPress={this.logOut}
-          buttonStyle={{
-            backgroundColor: "#9151BD",
-            height: 50,
-            borderRadius: 10
-          }}
-        />
-      </View>
+      ) : (
+        <View />
+      )
     ) : (
-      <View />
+      <Loading />
     );
   }
 }
 
 const styles = StyleSheet.create({
   maincontainer: {
-    justifyContent: "center",
     padding: 20
   },
+  statusBar: {
+    height: Constants.statusBarHeight
+  },
   title: {
-    marginTop: "8%",
-    marginBottom: "5%",
-    justifyContent: "center",
-    textAlign: "left",
     color: "#a773ca",
     fontSize: 40
   },
