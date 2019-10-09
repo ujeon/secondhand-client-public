@@ -35,6 +35,7 @@ export default class Select extends Component {
       .then(res => res.json())
       .then(res => res);
     brand = brand.map(element => element.brand);
+
     this.setState({ brand });
 
     await fetch("http://3.17.152.1:8000/api/top5/")
@@ -90,11 +91,14 @@ export default class Select extends Component {
   };
 
   render() {
-    return this.state.selectedModel !== "" ? (
-      <ScrollView showsVerticalScrollIndicator={false}>
+    return (
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.mainContainer}
+      >
         <View style={styles.statusBar} />
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>차트에 대한 제목</Text>
+          <Text style={styles.tabTitle}>HOME</Text>
         </View>
         <ScrollView
           style={styles.chartContainer}
@@ -113,7 +117,9 @@ export default class Select extends Component {
         >
           <View style={styles.chartCard}>
             <View style={styles.chartTitleContainter}>
-              <Text style={styles.chartTitle}>TOP5 제품 가격</Text>
+              <Text style={styles.chartTitle}>
+                게시물이 가장 많은 TOP5 유모차 평균 거래 가격 (원)
+              </Text>
             </View>
             <Top5Price
               top5={this.state.top5}
@@ -122,7 +128,9 @@ export default class Select extends Component {
           </View>
           <View style={styles.chartCard}>
             <View style={styles.chartTitleContainter}>
-              <Text style={styles.chartTitle}>게시글 TOP5</Text>
+              <Text style={styles.chartTitle}>
+                게시물이 가장 많은 TOP5 유모차 모델
+              </Text>
             </View>
             <Top5Quantity top5={this.state.top5} />
           </View>
@@ -155,14 +163,13 @@ export default class Select extends Component {
             </Picker>
           </View>
         </View>
-        <View style={styles.btnContainer}>
-          <Button
-            title="선택 하기"
-            type="solid"
-            buttonStyle={styles.btnStyle}
-            onPress={this.goResult}
-          />
-        </View>
+
+        <Button
+          title="선택 하기"
+          type="solid"
+          buttonStyle={styles.btnStyle}
+          onPress={this.goResult}
+        />
       </ScrollView>
     ) : (
       <Loading />
@@ -171,20 +178,23 @@ export default class Select extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    padding: 20
+  },
   statusBar: {
     height: Constants.statusBarHeight
   },
   chartContainer: {
     height: height * 0.6,
-    padding: "2%",
-    backgroundColor: "#bd96d7"
+    padding: "2%"
   },
   chartCard: {
     flex: 1,
-    alignItems: "stretch",
+    alignItems: "center",
     justifyContent: "space-between",
     marginTop: "1.5%",
     marginRight: 20,
+    marginLeft: 0.7,
     width: width * 0.9,
     height: height * 0.53,
     borderRadius: 20,
@@ -197,33 +207,32 @@ const styles = StyleSheet.create({
   },
   chartTitle: {
     marginLeft: "5%",
-    fontSize: 18
+    fontSize: 13,
+    fontStyle: "italic"
   },
-
   titleContainer: {
-    padding: "2%"
+    marginBottom: "2%"
+  },
+  tabTitle: {
+    fontSize: 40,
+    color: "#a773ca"
   },
   title: {
-    fontSize: 20
+    marginTop: "5%",
+    fontSize: 25
   },
-  btnContainer: {
-    flex: 1,
-    alignItems: "center",
-    marginTop: "4%"
-  },
+
   pickerContainer: {
-    width,
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-around"
   },
   picker: {
     height: 50,
-    width: 200
+    width: width * 0.4
   },
   btnStyle: {
-    width: width * 0.5,
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: "#9151bd"
   }
 });

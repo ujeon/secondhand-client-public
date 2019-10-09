@@ -12,48 +12,108 @@ export default class SignUp extends React.Component {
       password: undefined,
       isSignUp: undefined,
       emailErrMsg: "",
-      nickErrMsg: ""
+      nickErrMsg: "",
+      passwordErrMsg: ""
     };
   }
 
   handleSignUpButtonClicked = async () => {
     let { email, nickname, password } = this.state;
-    password = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      password
-    );
-    await fetch("http://3.17.152.1:8000/user/signup/", {
-      method: "POST",
-      body: JSON.stringify({ email, nickname, password })
-    })
-      .then(res => res.json())
-      .then(res => {
-        if (
-          res.emailErrMsg === "이미 존재하는 이메일이에요." &&
-          res.nickErrMsg === "이미 존재하는 닉네임이에요."
-        ) {
-          this.setState({
-            isSignUp: false,
-            emailErrMsg: "이미 존재하는 이메일이에요.",
-            nickErrMsg: "이미 존재하는 닉네임이에요."
-          });
-        } else if (res.emailErrMsg === "이미 존재하는 이메일이에요.") {
-          this.setState({
-            isSignUp: false,
-            emailErrMsg: "이미 존재하는 이메일이에요.",
-            nickErrMsg: ""
-          });
-        } else if (res.nickErrMsg === "이미 존재하는 닉네임이에요.") {
-          this.setState({
-            isSignUp: false,
-            nickErrMsg: "이미 존재하는 닉네임이에요.",
-            emailErrMsg: ""
-          });
-        } else {
-          this.setState({ isSignUp: true, emailErrMsg: "", nickErrMsg: "" });
-        }
+
+    if (!email && !nickname && !password) {
+      this.setState({
+        isSignUp: false,
+        emailErrMsg: "이메일을 입력해주세요.",
+        nickErrMsg: "닉네임을 입력해주세요.",
+        passwordErrMsg: "비밀번호를 입력해주세요."
+      });
+    } else if (!email || !nickname || !password) {
+      if (!email && !nickname) {
+        this.setState({
+          isSignUp: false,
+          emailErrMsg: "이메일을 입력해주세요.",
+          nickErrMsg: "닉네임을 입력해주세요.",
+          passwordErrMsg: ""
+        });
+      } else if (!email && !password) {
+        this.setState({
+          isSignUp: false,
+          emailErrMsg: "이메일을 입력해주세요.",
+          nickErrMsg: "",
+          passwordErrMsg: "비밀번호를 입력해주세요."
+        });
+      } else if (!nickname && !password) {
+        this.setState({
+          isSignUp: false,
+          emailErrMsg: "",
+          nickErrMsg: "닉네임을 입력해주세요.",
+          passwordErrMsg: "비밀번호를 입력해주세요."
+        });
+      } else if (!email) {
+        this.setState({
+          isSignUp: false,
+          emailErrMsg: "이메일을 입력해주세요.",
+          nickErrMsg: "",
+          passwordErrMsg: ""
+        });
+      } else if (!nickname) {
+        this.setState({
+          isSignUp: false,
+          emailErrMsg: "",
+          nickErrMsg: "닉네임을 입력해주세요.",
+          passwordErrMsg: ""
+        });
+      } else if (!password) {
+        this.setState({
+          isSignUp: false,
+          emailErrMsg: "",
+          nickErrMsg: "",
+          passwordErrMsg: "비밀번호를 입력해주세요."
+        });
+      }
+    }
+
+    if (email && nickname && password) {
+      password = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        password
+      );
+      await fetch("http://3.17.152.1:8000/user/signup/", {
+        method: "POST",
+        body: JSON.stringify({ email, nickname, password })
       })
-      .catch(err => console.log(err));
+        .then(res => res.json())
+        .then(res => {
+          if (
+            res.emailErrMsg === "이미 존재하는 이메일이에요." &&
+            res.nickErrMsg === "이미 존재하는 닉네임이에요."
+          ) {
+            this.setState({
+              isSignUp: false,
+              emailErrMsg: "이미 존재하는 이메일이에요.",
+              nickErrMsg: "이미 존재하는 닉네임이에요.",
+              passwordErrMsg: ""
+            });
+          } else if (res.emailErrMsg === "이미 존재하는 이메일이에요.") {
+            this.setState({
+              isSignUp: false,
+              emailErrMsg: "이미 존재하는 이메일이에요.",
+              nickErrMsg: "",
+              passwordErrMsg: ""
+            });
+          } else if (res.nickErrMsg === "이미 존재하는 닉네임이에요.") {
+            this.setState({
+              isSignUp: false,
+              nickErrMsg: "이미 존재하는 닉네임이에요.",
+              emailErrMsg: "",
+              passwordErrMsg: ""
+            });
+          } else {
+            this.setState({ isSignUp: true, emailErrMsg: "", nickErrMsg: "" });
+          }
+        })
+        .catch(err => console.log(err));
+    }
   };
 
   render() {
@@ -115,6 +175,7 @@ export default class SignUp extends React.Component {
           }
           placeholder="   Password"
           placeholderTextColor="grey"
+          errorMessage={this.state.passwordErrMsg}
           secureTextEntry={true}
           leftIcon={
             <Icon

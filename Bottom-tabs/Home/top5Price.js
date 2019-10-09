@@ -3,7 +3,7 @@ import { BarChart, XAxis } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
 import { View, Dimensions, StyleSheet } from "react-native";
 
-const { height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 class Top5Price extends React.PureComponent {
   constructor(props) {
@@ -63,7 +63,7 @@ class Top5Price extends React.PureComponent {
     return this.state.top5[0] ? (
       <View style={styles.chart}>
         <BarChart
-          style={{ height: height * 0.4 }}
+          style={styles.barChart}
           data={this.state.top5}
           gridMin={0}
           yAccessor={({ item }) => item.averge_price}
@@ -92,7 +92,8 @@ const styles = StyleSheet.create({
   labelsContainer: {},
   chart: {
     marginBottom: "5%"
-  }
+  },
+  barChart: { height: height * 0.4, width: width * 0.9 }
 });
 
 export default Top5Price;

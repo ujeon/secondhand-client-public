@@ -41,22 +41,27 @@ export default class AverageMonthly extends Component {
             ]
           }}
           width={width * 2} // from react-native
-          height={height * 0.25}
+          height={height * 0.32}
           yAxisLabel=""
           chartConfig={{
-            backgroundGradientFrom: "#e5b2ca",
-            backgroundGradientTo: "#7028e4",
+            backgroundGradientFrom: "#9151BD",
+            backgroundGradientTo: "#bd96d7",
             decimalPlaces: 0, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16
-            }
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`
           }}
           fromZero={true}
           bezier
           style={styles.chart}
         />
-        <View style={{ flex: 1, flexDirection: "row", width: width * 2 }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            width: width * 2,
+            marginLeft: "0.5%",
+            marginRight: "0.5%"
+          }}
+        >
           <View style={styles.minPriceContainer}>
             <Text style={styles.infoText}>
               {`최근 1달 내 최저 가격: ${String(
@@ -88,18 +93,18 @@ export default class AverageMonthly extends Component {
 
 const styles = StyleSheet.create({
   chartContainer: {
-    height: height * 0.4
+    height: height * 0.5
   },
   chart: {
     flex: 2,
     marginVertical: 10,
-    borderRadius: 16
+    height: height * 0.3
   },
   avgPriceContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#AB6DD7",
+    backgroundColor: "#a773ca",
     borderRadius: 20,
     padding: 3,
     marginEnd: 10,
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#7028e4",
+    backgroundColor: "#9151BD",
     borderRadius: 20,
     padding: 3,
     marginEnd: 10,
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#e5b2ca",
+    backgroundColor: "#bd96d7",
     borderRadius: 20,
     padding: 3,
     marginEnd: 10,

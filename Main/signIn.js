@@ -12,6 +12,7 @@ import {
 import { Input, Icon, Button } from "react-native-elements";
 import * as Crypto from "expo-crypto";
 import getAuth from "../fetchFns/fetchFns";
+import { emitNotification } from "expo/build/Notifications/Notifications";
 
 const { width, height } = Dimensions.get("window");
 
@@ -58,28 +59,44 @@ export default class SignIn extends React.Component {
 
   requestUserSignIn = async () => {
     let { email, password } = this.state;
-    password = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      password
-    );
+    if (!email && !password) {
+      this.setState({
+        errMsg: "아이디와 비밀번호를 입력해주세요."
+      });
+    } else if (!email || !password) {
+      if (!email) {
+        this.setState({
+          errMsg: "이메일을 입력해주세요."
+        });
+      } else {
+        this.setState({
+          errMsg: "비밀번호를 입력해주세요."
+        });
+      }
+    } else if (email && password) {
+      password = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        password
+      );
 
-    await fetch("http://3.17.152.1:8000/user/signin/", {
-      method: "POST",
-      body: JSON.stringify({ email, password })
-    })
-      .then(async res => {
-        const token = res.headers.get("token");
-        if (!token) {
-          this.setState({
-            isSignIn: false,
-            errMsg: "아이디 혹은 비밀번호를 다시 확인해주세요."
-          });
-        } else {
-          this.setState({ isSignIn: true });
-          await AsyncStorage.setItem("token", token);
-        }
+      await fetch("http://3.17.152.1:8000/user/signin/", {
+        method: "POST",
+        body: JSON.stringify({ email, password })
       })
-      .catch(err => console.log(err));
+        .then(async res => {
+          const token = res.headers.get("token");
+          if (!token) {
+            this.setState({
+              isSignIn: false,
+              errMsg: "아이디 혹은 비밀번호를 다시 확인해주세요."
+            });
+          } else {
+            this.setState({ isSignIn: true });
+            await AsyncStorage.setItem("token", token);
+          }
+        })
+        .catch(err => console.log(err));
+    }
   };
 
   handleSignInBtn = async () => {
