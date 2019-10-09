@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import ProductList from "../components/productList";
 import AverageMonthly from "./averageMonthly";
 import Loading from "../components/loading";
@@ -150,7 +150,7 @@ class Result extends Component {
             right: 30
           }}
         >
-          <View style={styles.chartContainer}>
+          {this.state.model !== "etc" ? (
             <ScrollView
               pagingEnabled={true}
               horizontal={true}
@@ -170,7 +170,11 @@ class Result extends Component {
                 averageByMonth={this.state.averageByMonth}
               />
             </ScrollView>
-          </View>
+          ) : (
+            <View style={styles.chartContainer}>
+              <Text>평균가격 정보를 보시려면 특정 모델을 선택해주세요</Text>
+            </View>
+          )}
           <ProductList
             data={this.state.data}
             toggleFavorite={this.toggleFavorite}
@@ -186,7 +190,10 @@ export default Result;
 
 const styles = StyleSheet.create({
   chartContainer: {
-    height: height * 0.4
+    flex: 1,
+    height: height * 0.2,
+    justifyContent: "center",
+    alignItems: "center"
   },
   titleContainer: {
     paddingTop: "5%"

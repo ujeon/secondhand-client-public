@@ -62,22 +62,21 @@ export default class Favorite extends React.Component {
   };
 
   render() {
-    if (this.state.isSignIn === true) {
-      return (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.statusBar} />
+    return (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.statusBar} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.tabTitle}>FAVORITE</Text>
+        </View>
+        {this.state.isSignIn === true ? (
           <ProductList
             data={this.state.favoriteData}
             toggleFavorite={this.toggleFavorite}
           />
-        </ScrollView>
-      );
-    }
-    return (
-      <View style={styles.mainContainer}>
-        <View style={styles.statusBar} />
-        <Text>회원가입을 하시면 즐겨찾기 추가가 가능합니다 :)</Text>
-      </View>
+        ) : (
+          <Text>회원가입을 하시면 즐겨찾기 추가가 가능합니다 :)</Text>
+        )}
+      </ScrollView>
     );
   }
 }
@@ -90,5 +89,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  titleContainer: {
+    marginBottom: "2%"
+  },
+  tabTitle: {
+    fontSize: 40,
+    color: "#a773ca"
   }
 });

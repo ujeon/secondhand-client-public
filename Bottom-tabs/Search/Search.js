@@ -237,7 +237,7 @@ export default class Search extends Component {
           }}
           containerStyle={{ marginTop: 10 }}
         />
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {this.state.data ? (
             <ProductList
               data={this.state.data}
