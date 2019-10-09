@@ -11,6 +11,7 @@ import Constants from "expo-constants";
 import { Button } from "react-native-elements";
 import Top5Quantity from "./top5Quantity";
 import Top5Price from "./top5Price";
+import Loading from "../components/loading";
 
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
@@ -22,7 +23,9 @@ export default class Select extends Component {
       brand: [],
       model: [],
       selectedBrand: "",
-      selectedModel: ""
+      selectedModel: "",
+      top5: [],
+      originData: []
     };
   }
 
@@ -33,6 +36,30 @@ export default class Select extends Component {
       .then(res => res);
     brand = brand.map(element => element.brand);
     this.setState({ brand });
+
+    await fetch("http://3.17.152.1:8000/api/top5/")
+      .then(res => res.json())
+      .then(res => {
+        const color = ["#82ccdd", "#fad390", "#b8e994", "#6a89cc", "#f8c291"];
+        this.setState({
+          originData: res.map(el => ({ ...el }))
+        });
+        for (const i in res) {
+          res[i].svg = {
+            fill: color[i]
+          };
+        }
+        this.setState({
+          top5: res
+        });
+      })
+      .catch(err => console.error(err));
+
+    await this.selectBrand(this.state.brand[0]);
+    this.setState({
+      selectedBrand: this.state.brand[0],
+      selectedModel: this.state.model[0]
+    });
   }
 
   goResult = () => {
@@ -63,7 +90,7 @@ export default class Select extends Component {
   };
 
   render() {
-    return (
+    return this.state.selectedModel !== "" ? (
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.statusBar} />
         <View style={styles.titleContainer}>
@@ -88,13 +115,16 @@ export default class Select extends Component {
             <View style={styles.chartTitleContainter}>
               <Text style={styles.chartTitle}>TOP5 제품 가격</Text>
             </View>
-            <Top5Price />
+            <Top5Price
+              top5={this.state.top5}
+              originData={this.state.originData}
+            />
           </View>
           <View style={styles.chartCard}>
             <View style={styles.chartTitleContainter}>
               <Text style={styles.chartTitle}>게시글 TOP5</Text>
             </View>
-            <Top5Quantity />
+            <Top5Quantity top5={this.state.top5} />
           </View>
         </ScrollView>
         <View style={styles.titleContainer}>
@@ -134,6 +164,8 @@ export default class Select extends Component {
           />
         </View>
       </ScrollView>
+    ) : (
+      <Loading />
     );
   }
 }
