@@ -13,7 +13,6 @@ export default class AverageMonthly extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.averageByMonth);
     this.setState({ averageByMonth: this.props.averageByMonth });
   }
 

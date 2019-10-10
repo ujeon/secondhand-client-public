@@ -18,7 +18,7 @@ const { height } = Dimensions.get("window");
 
 export default class Select extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       brand: [],
       model: [],
@@ -30,7 +30,6 @@ export default class Select extends Component {
   }
 
   async componentDidMount() {
-    // 브랜드와 모델을 fetch해서 state에 저장 후 드롭다운 메뉴에 뿌려주기
     let brand = await fetch("http://3.17.152.1:8000/api/category/유모차/brand/")
       .then(res => res.json())
       .then(res => res);
@@ -165,7 +164,7 @@ export default class Select extends Component {
         </View>
 
         <Button
-          title="선택 하기"
+          title="검   색"
           type="solid"
           buttonStyle={styles.btnStyle}
           onPress={this.goResult}

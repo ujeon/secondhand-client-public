@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { Card } from "react-native-elements";
 import Constants from "expo-constants";
 import ProductList from "../components/productList";
 import AverageMonthly from "./averageMonthly";
 import Loading from "../components/loading";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 class Result extends Component {
   constructor(props) {
@@ -173,9 +174,23 @@ class Result extends Component {
               />
             </ScrollView>
           ) : (
-            <View style={styles.chartContainer}>
+            <Card
+              containerStyle={{
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "3%",
+                marginBottom: 50,
+                paddingTop: 80,
+                paddingBottom: 80,
+                borderWidth: 1,
+                borderColor: "#9151BD",
+                borderRadius: 10,
+                position: "relative",
+                elevation: 6
+              }}
+            >
               <Text>평균가격 정보를 보시려면 특정 모델을 선택해주세요</Text>
-            </View>
+            </Card>
           )}
           <ProductList
             data={this.state.data}
@@ -194,25 +209,10 @@ const styles = StyleSheet.create({
   statusBar: {
     height: Constants.statusBarHeight
   },
-  chartContainer: {
-    flex: 1,
-    height: height * 0.2,
-    justifyContent: "center",
-    alignItems: "center"
-  },
   titleContainer: {
     paddingTop: "5%"
   },
   title: {
     fontSize: 26
-  },
-  view: {
-    marginTop: "1.5%",
-    backgroundColor: "#2e2e2e",
-    width: width - 80,
-    margin: 10,
-    height: 300,
-    borderRadius: 10,
-    paddingHorizontal: 30
   }
 });

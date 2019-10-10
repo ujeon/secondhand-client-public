@@ -3,12 +3,11 @@ import { View, Dimensions, StyleSheet } from "react-native";
 import { BarChart, YAxis } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
 
-const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
 
 class Top5Quantity extends React.PureComponent {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       top5: []
     };
@@ -19,7 +18,6 @@ class Top5Quantity extends React.PureComponent {
   }
 
   render() {
-    const CUT_OFF = this.state.top5[0] ? this.state.top5[0].quantity : 0;
     const Labels = ({ x, y, bandwidth }) =>
       this.state.top5.map((v, index) => (
         <Text

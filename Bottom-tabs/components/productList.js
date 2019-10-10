@@ -38,18 +38,23 @@ class ProductList extends Component {
   }
 
   getLocationAsync = async () => {
-    await Permissions.askAsync(Permissions.LOCATION);
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      this.setState({
+        currentLocation: "-"
+      });
+    } else {
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High
+      });
 
-    const location = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.High
-    });
-
-    const coordinates = {};
-    coordinates.latitude = location.coords.latitude;
-    coordinates.longitude = location.coords.longitude;
-    this.setState({
-      currentLocation: { ...coordinates }
-    });
+      const coordinates = {};
+      coordinates.latitude = location.coords.latitude;
+      coordinates.longitude = location.coords.longitude;
+      this.setState({
+        currentLocation: { ...coordinates }
+      });
+    }
   };
 
   getDistanceFromLatLonInKm = (lat1, lng1, lat2, lng2) => {
@@ -125,14 +130,20 @@ class ProductList extends Component {
         try {
           if (data.location !== "-") {
             const arrLoc = data.location.split("-");
-            const distance = this.getDistanceFromLatLonInKm(
-              this.state.currentLocation.latitude,
-              this.state.currentLocation.longitude,
-              Number(arrLoc[0]),
-              Number(arrLoc[1])
-            );
-            data.distance = distance;
-            // 여기에서 좌표를 동으로 바꿔준다.
+            if (this.state.currentLocation !== "-") {
+              const distance = this.getDistanceFromLatLonInKm(
+                this.state.currentLocation.latitude,
+                this.state.currentLocation.longitude,
+                Number(arrLoc[0]),
+                Number(arrLoc[1])
+              );
+
+              data.distance = distance;
+            } else {
+              data.distance = Infinity;
+            }
+
+            // 좌표를 동으로 바꿔준다.
             const address = await this.getActualAddress(
               Number(arrLoc[0]),
               Number(arrLoc[1])
@@ -195,6 +206,8 @@ class ProductList extends Component {
             let location;
             l.location === "-"
               ? (location = "지역정보 없음")
+              : l.distance === Infinity
+              ? (location = `${l.address}`)
               : (location = `${l.address} ${parseInt(l.distance)}km`);
 
             // NOTE 즐겨찾기가 추가 되어 있으면 빈 하트 아이콘, 아니면 일반 하트 아이콘
