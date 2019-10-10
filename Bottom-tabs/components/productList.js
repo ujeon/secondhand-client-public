@@ -22,18 +22,22 @@ class ProductList extends Component {
     this.state = {
       currentLocation: {},
       data: null,
-      selectedValue: "최신순"
+      selectedValue: "최신순",
+      isFavPage: false
     };
   }
 
   async componentDidMount() {
     await this.getLocationAsync();
     await this.refineData();
+    this.setState({ isFavPage: this.props.isFavPage });
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) {
-      this.refineData();
+      console.log(this.state.selectedValue);
+      this.setState({ data: this.props.data });
+      // this.refineData();
     }
   }
 
@@ -77,9 +81,9 @@ class ProductList extends Component {
   };
 
   sortResultData = e => {
-    this.setState({
-      selectedValue: e
-    });
+    // this.setState({
+    //   selectedValue: e
+    // });
     const stateData = this.state.data;
     if (e === "최신순") {
       stateData.filtered_data.sort(
@@ -93,6 +97,7 @@ class ProductList extends Component {
       stateData.filtered_data.sort((a, b) => a.distance - b.distance);
     }
     this.setState({
+      selectedValue: e,
       data: stateData
     });
   };
@@ -182,24 +187,28 @@ class ProductList extends Component {
 
     return (
       <View>
-        <Picker
-          selectedValue={this.state.selectedValue}
-          style={styles.picker}
-          onValueChange={itemValue => this.sortResultData(itemValue)}
-        >
-          <Picker.Item label="최신순" value="최신순" key="최신순" />
-          <Picker.Item
-            label="가격오름차순"
-            value="가격오름차순"
-            key="가격오름차순"
-          />
-          <Picker.Item
-            label="가격내림차순"
-            value="가격내림차순"
-            key="가격내림차순"
-          />
-          <Picker.Item label="거리순" value="거리순" key="거리순" />
-        </Picker>
+        {!this.state.isFavPage ? (
+          <Picker
+            selectedValue={this.state.selectedValue}
+            style={styles.picker}
+            onValueChange={itemValue => this.sortResultData(itemValue)}
+          >
+            <Picker.Item label="최신순" value="최신순" key="최신순" />
+            <Picker.Item
+              label="가격오름차순"
+              value="가격오름차순"
+              key="가격오름차순"
+            />
+            <Picker.Item
+              label="가격내림차순"
+              value="가격내림차순"
+              key="가격내림차순"
+            />
+            <Picker.Item label="거리순" value="거리순" key="거리순" />
+          </Picker>
+        ) : (
+          <View />
+        )}
         <View style={styles.itemList}>
           {list.map(l => {
             // NOTE 데이터에 지역정보가 존재하면 해당 지역을 표시하고, 그렇지 않은 경우 대체 문구를 표시합니다.

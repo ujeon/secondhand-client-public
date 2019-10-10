@@ -75,6 +75,7 @@ export default class Favorite extends React.Component {
           <ProductList
             data={this.state.favoriteData}
             toggleFavorite={this.toggleFavorite}
+            isFavPage={true}
           />
         ) : (
           <Text>회원가입을 하시면 즐겨찾기 추가가 가능합니다 :)</Text>
