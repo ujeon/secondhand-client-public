@@ -27,7 +27,7 @@ const StackNav = createStackNavigator(
 const HomeStack = createAppContainer(StackNav);
 
 const Home = props => {
-  onLoad = callback => {
+  const onLoad = callback => {
     props.navigation.addListener("willFocus", () => {
       callback();
     });
@@ -36,8 +36,7 @@ const Home = props => {
     <HomeStack
       screenProps={{
         fav: props.screenProps,
-        listener: this.onLoad,
-        remover: this.remover
+        listener: onLoad
       }}
     />
   );

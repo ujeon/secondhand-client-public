@@ -112,7 +112,7 @@ export default class SignUp extends React.Component {
             this.setState({ isSignUp: true, emailErrMsg: "", nickErrMsg: "" });
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
   };
 

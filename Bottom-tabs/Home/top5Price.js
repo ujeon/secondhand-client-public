@@ -7,7 +7,7 @@ const { width, height } = Dimensions.get("window");
 
 class Top5Price extends React.PureComponent {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       top5: [],
       originData: []
@@ -72,7 +72,6 @@ class Top5Price extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  labelsContainer: {},
   chart: {
     marginBottom: "5%"
   },

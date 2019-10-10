@@ -95,7 +95,7 @@ export default class SignIn extends React.Component {
             await AsyncStorage.setItem("token", token);
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
   };
 
@@ -110,7 +110,7 @@ export default class SignIn extends React.Component {
         token
       });
     } else {
-      console.log("로그인에 실패했습니다");
+      console.error("로그인에 실패했습니다");
     }
   };
 

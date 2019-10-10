@@ -91,7 +91,7 @@ export default class Search extends Component {
 
       const result = {};
       const stateData = { ...this.state.data };
-      data = stateData.filtered_data.map(el => {
+      const data = stateData.filtered_data.map(el => {
         if (newFavLength !== 0) {
           for (let i = 0; i < newFavLength; i++) {
             if (newFavoriteData[i].id === el.id) {
@@ -154,7 +154,10 @@ export default class Search extends Component {
     return this.state.loading === "loading" ? (
       <Loading />
     ) : (
-      <View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="always"
+      >
         <View style={styles.container}>
           <View style={styles.statusBar} />
           <Text style={styles.title}>SEARCH</Text>
@@ -240,8 +243,7 @@ export default class Search extends Component {
             }}
             containerStyle={{ marginTop: 10 }}
           />
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
+
           {this.state.data ? (
             <ProductList
               data={this.state.data}
@@ -250,8 +252,8 @@ export default class Search extends Component {
           ) : (
             <View />
           )}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }
