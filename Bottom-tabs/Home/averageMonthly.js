@@ -45,7 +45,7 @@ export default class AverageMonthly extends Component {
           yAxisLabel=""
           chartConfig={{
             backgroundGradientFrom: "#9151BD",
-            backgroundGradientTo: "#bd96d7",
+            backgroundGradientTo: "#FE8C8C",
             decimalPlaces: 0, // optional, defaults to 2dp
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`
           }}
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#bd96d7",
+    backgroundColor: "#FE8C8C",
     borderRadius: 20,
     padding: 3,
     marginEnd: 10,

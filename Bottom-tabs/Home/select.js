@@ -40,7 +40,7 @@ export default class Select extends Component {
     await fetch("http://3.17.152.1:8000/api/top5/")
       .then(res => res.json())
       .then(res => {
-        const color = ["#82ccdd", "#fad390", "#b8e994", "#6a89cc", "#f8c291"];
+        const color = ["#a3586d", "#5c4a72", "#f3b05a", "#f4874b", "#f46a4e"];
         this.setState({
           originData: res.map(el => ({ ...el }))
         });

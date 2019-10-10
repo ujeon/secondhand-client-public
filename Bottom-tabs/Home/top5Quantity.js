@@ -18,19 +18,22 @@ class Top5Quantity extends React.PureComponent {
   }
 
   render() {
-    const Labels = ({ x, y, bandwidth }) =>
-      this.state.top5.map((v, index) => (
+    const Labels = ({ x, y, bandwidth }) => {
+      const CUT_OFF = this.state.top5[0].quantity;
+      return this.state.top5.map((v, index) => (
         <Text
           key={index}
-          x={x(this.state.top5[0].quantity) - 100}
+          x={x(this.state.top5[0].quantity) - 40}
           y={y(index) + bandwidth / 2}
-          fontSize={16}
-          fill="black"
+          fontSize={12}
+          fontStyle="italic"
+          fill={this.state.top5[0].quantity === v.quantity ? "white" : "black"}
           alignmentBaseline="middle"
         >
           {`${v.quantity}개`}
         </Text>
       ));
+    };
 
     return this.state.top5[0] ? (
       <View style={styles.chart}>
@@ -48,7 +51,7 @@ class Top5Quantity extends React.PureComponent {
             return "";
           }}
           svg={{
-            fontSize: 15,
+            fontSize: 12,
             fill: "black"
           }}
         />

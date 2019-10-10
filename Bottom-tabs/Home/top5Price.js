@@ -35,8 +35,8 @@ class Top5Price extends React.PureComponent {
               ? y(value.averge_price) - 10
               : y(value.averge_price) + 20
           }
-          fontSize={15}
-          fill="black"
+          fontSize={10}
+          fill={value.averge_price >= CUT_OFF ? "white" : "black"}
           alignmentBaseline="middle"
           textAnchor="middle"
         >
