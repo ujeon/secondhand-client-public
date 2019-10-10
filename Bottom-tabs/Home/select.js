@@ -100,12 +100,13 @@ export default class Select extends Component {
         <View style={styles.titleContainer}>
           <Text style={styles.tabTitle}>HOME</Text>
         </View>
+
         <ScrollView
           style={styles.chartContainer}
           pagingEnabled={true}
           horizontal={true}
           decelerationRate={0}
-          snapToInterval={width - 60}
+          snapToInterval={width - 20}
           snapToAlignment="center"
           contentInset={{
             top: 0,
@@ -135,6 +136,7 @@ export default class Select extends Component {
             <Top5Quantity top5={this.state.top5} />
           </View>
         </ScrollView>
+
         <View style={styles.titleContainer}>
           <Text style={styles.title}>브랜드와 모델을 검색해보세요</Text>
         </View>
@@ -193,10 +195,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginTop: "1.5%",
-    marginRight: 20,
-    marginLeft: 0.7,
-    width: width * 0.9,
-    height: height * 0.53,
+    marginRight: 25,
+    marginLeft: 5,
+    width: width * 0.86,
+    height: height * 0.52,
     borderRadius: 20,
     elevation: 6,
     backgroundColor: "#ffffff"
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic"
   },
   titleContainer: {
-    marginBottom: "2%"
+    marginBottom: "3%"
   },
   tabTitle: {
     fontSize: 40,
@@ -225,7 +227,8 @@ const styles = StyleSheet.create({
   pickerContainer: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
+    marginBottom: "3%"
   },
   picker: {
     height: 50,
